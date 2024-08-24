@@ -13,6 +13,8 @@
 #include <utils/string.hpp>
 #include <utils/hook.hpp>
 
+#include "dvars.hpp"
+
 #pragma region macros
 
 #define READ_BOOL(__var__, __dvar__) \

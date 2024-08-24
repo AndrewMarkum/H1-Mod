@@ -79,6 +79,7 @@ namespace game
 	WEAK symbol<void(dvar_t* dvar, DvarSetSource source)> Dvar_Reset{0x41B5F0, 0x185390};
 	WEAK symbol<void(const char*, const char*, 
 		DvarSetSource)> Dvar_SetFromStringByNameFromSource{0x41BD90, 0x185BD0};
+	WEAK symbol<void(dvar_t* dvar, float r, float g, float b, float a)> Dvar_SetColor{0x0, 0x1855C0};
 	WEAK symbol<void(dvar_t* dvar, const char* string, DvarSetSource source)> Dvar_SetFromStringFromSource{0x0, 0x185C60};
 
 	WEAK symbol<dvar_t*(int hash, const char* name, bool value, 
@@ -184,6 +185,9 @@ namespace game
 	WEAK symbol<void(float value)> Scr_AddFloat{ 0x0, 0x50EA80 };
 	WEAK symbol<void(int value)> Scr_AddInt{0x3C7A40, 0x50EB70};
 	WEAK symbol<void(int value)> Scr_AddBool{0x3C77C0, 0x50E8F0};
+
+	WEAK symbol<void(const char* fogstring, int clientNum, int setWaterFog)> G_SetFog{ 0x0, 0x413160 };
+	WEAK symbol<void(int clientNum, const char* cmd, bool setWaterFog)> Scr_SetFog{ 0x0, 0x4519C0 };
 
 	WEAK symbol<void(unsigned int id, scr_string_t stringValue, 
 		unsigned int paramcount)> Scr_NotifyId{0x3C92E0, 0x510340};
@@ -364,6 +368,8 @@ namespace game
 	WEAK symbol<GfxWorld*> s_world{0x0, 0xE973AE0};
 
 	WEAK symbol<ID3D11Device*> d3d11_device{0x1163B98, 0x12DFBF8};
+
+	WEAK symbol<HWND> hWnd{ 0x0, 0xC9DD2E0 };
 
 	namespace mp
 	{

@@ -35,4 +35,9 @@ namespace dvars
 
 		void on_register(const std::string& name, const std::function<void()>& callback);
 	}
+
+	void dvar_set_bool(game::dvar_t* dvar, bool boolean);
+	void dvar_set_float(game::dvar_t* dvar, float fl);
+	void dvar_set_int(game::dvar_t* dvar, int integer);
+	void dvar_set_string(game::dvar_t* dvar, const char* string);
 }
