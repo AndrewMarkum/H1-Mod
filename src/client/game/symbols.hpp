@@ -180,6 +180,8 @@ namespace game
 		unsigned int paramcount)> VM_Execute{0x3C9E50, 0x510EB0};
 
 	WEAK symbol<void(const char* value)> Scr_AddString{0x3C7B20, 0x50EC50};
+	WEAK symbol<void(float* value)> Scr_AddVector{ 0x0, 0x50EE10 };
+	WEAK symbol<void(float value)> Scr_AddFloat{ 0x0, 0x50EA80 };
 	WEAK symbol<void(int value)> Scr_AddInt{0x3C7A40, 0x50EB70};
 	WEAK symbol<void(int value)> Scr_AddBool{0x3C77C0, 0x50E8F0};
 
