@@ -6,6 +6,7 @@
 
 #include "component/scheduler.hpp"
 #include "gui.hpp"
+#include "fog_editor.hpp"
 #include "component/console.hpp"
 
 #include <utils/string.hpp>
@@ -55,19 +56,6 @@ namespace gui
 			initialized = true;
 		}
 
-		void run_event_queue()
-		{
-			event_queue.access([](std::vector<event>& queue)
-				{
-					for (const auto& event : queue)
-					{
-						ImGui_ImplWin32_WndProcHandler(event.hWnd, event.msg, event.wParam, event.lParam);
-					}
-
-					queue.clear();
-				});
-		}
-
 		void new_gui_frame()
 		{
 			ImGui::GetIO().MouseDrawCursor = toggled;
@@ -82,7 +70,6 @@ namespace gui
 
 			ImGui_ImplDX11_NewFrame();
 			ImGui_ImplWin32_NewFrame();
-			run_event_queue();
 
 			ImGui::NewFrame();
 		}
@@ -234,40 +221,42 @@ namespace gui
 		}
 
 		utils::hook::detour wnd_proc_hook;
-		LRESULT wnd_proc_stub(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+		LRESULT wnd_proc_stub(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			if (wParam != VK_ESCAPE && toggled)
 			{
-				event_queue.access([hWnd, msg, wParam, lParam](std::vector<event>& queue)
+				event_queue.access([hWnd, uMsg, wParam, lParam](std::vector<event>& queue)
 					{
-						queue.push_back({ hWnd, msg, wParam, lParam });
+						queue.push_back({ hWnd, uMsg, wParam, lParam });
 					});
 			}
 
-			return wnd_proc_hook.invoke<LRESULT>(hWnd, msg, wParam, lParam);
-		}
-	}
+			if (uMsg == WM_KEYUP && wParam == VK_F2)
+			{
+				toggled = !toggled;
 
-	bool gui_key_event(const int local_client_num, const int key, const int down)
-	{
-		if (key == game::keyNum_t::K_F2 && down)
+				return 0;
+			}
+			
+			if (gui::toggled)
+			{
+				LRESULT result = ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
+				return TRUE;
+			}
+
+			return wnd_proc_hook.invoke<LRESULT>(hWnd, uMsg, wParam, lParam);
+		}
+
+		utils::hook::detour set_cursor_pos;
+		bool set_cursor_pos_stub(int x, int y)
 		{
-			toggled = !toggled;
-			return false;
+			if (gui::toggled)
+			{
+				return false;
+			}
+
+			return set_cursor_pos.invoke<bool>(x, y);
 		}
-
-		if (key == game::keyNum_t::K_ESCAPE && down && toggled)
-		{
-			toggled = false;
-			return false;
-		}
-
-		return !toggled;
-	}
-
-	bool gui_char_event(const int local_client_num, const int key)
-	{
-		return !toggled;
 	}
 
 	bool gui_mouse_event(const int local_client_num, int x, int y)
@@ -326,7 +315,9 @@ namespace gui
 			utils::hook::nop(SELECT_VALUE(0x5B3570_b, 0x6CB16D_b), 9);
 			utils::hook::call(SELECT_VALUE(0x5B3573_b, 0x6CB170_b), gui_on_frame);
 			wnd_proc_hook.create(SELECT_VALUE(0x4631D0_b, 0x5BFF60_b), wnd_proc_stub);
+			set_cursor_pos.create(0x5BA990_b, set_cursor_pos_stub);
 
+			register_menu("fog_editor", "Fog Editor", gui::fog_editor::render_window);
 			on_frame([]
 				{
 					show_notifications();

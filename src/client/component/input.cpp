@@ -8,6 +8,8 @@
 
 #include <utils/hook.hpp>
 
+#include "gui.hpp"
+
 namespace input
 {
 	namespace
