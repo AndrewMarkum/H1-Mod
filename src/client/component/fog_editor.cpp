@@ -96,13 +96,13 @@ namespace gui::fog_editor
 	bool _g_heightFogEnabledReadOnly = false;
 	float _g_heightFogHalfPlaneDistanceReadOnly = 0.f;
 	float _g_heightFogBaseHeightReadOnly = 0.f;
-	float _g_fogColorReadOnly[4] = { 0.f, 0.f, 0.f, 0.f };
+	float _g_fogColorReadOnly[3] = { 0.f, 0.f, 0.f };
 	float _g_fogColorIntensityReadOnly = 0.f;
 
 	bool _g_sunFogEnabledReadOnly = false;
-	float _g_sunFogColorReadOnly[4] = { 0.f, 0.f, 0.f, 0.f };
+	float _g_sunFogColorReadOnly[4] = { 1.f, 0.f, 0.f };
 	float _g_sunFogScaleReadOnly = 0.f;
-	float _g_sunFogDirReadOnly[3] = {};
+	float _g_sunFogDirReadOnly[2] = {};
 	float _g_sunFogBeginFadeAngleReadOnly = 0.f;
 	float _g_sunFogEndFadeAngleReadOnly = 0.f;
 	float _g_sunFogColorIntensityReadOnly = 1.f;
@@ -116,34 +116,34 @@ namespace gui::fog_editor
 	{
 		//if (_trigger)
 		//{
-		//	scripting::entity level = scripting::entity(scripting::entity({ static_cast<uint16_t>(*::game::levelEntityId), 0 }));
-		//	scripting::entity _visionset_ent = scripting::call_script_function(level, "scripts/mp/main", "setup_fog", { (strcmp(_fog_vision_id, "") == 0) ? game::Dvar_FindVar("mapname")->current.string : _fog_vision_id }).as<scripting::entity>();
+			//scripting::entity level = scripting::entity(scripting::entity({ static_cast<uint16_t>(*::game::levelEntityId), 0 }));
+			//scripting::entity _visionset_ent = scripting::call_script_function(level, "scripts/mp/main", "setup_fog", { (strcmp(_fog_vision_id, "") == 0) ? game::Dvar_FindVar("mapname")->current.string : _fog_vision_id }).as<scripting::entity>();
 
-		//	//const char* pos = scripting::get_function_pos(/*"maps/mp/_art"*/"scripts/mp/main", "setup_fog");
-		//	//game::VariableValue _execent_ref = scripting::exec_ent_thread(level, pos, { (strcmp(_fog_vision_id, "") == 0) ? game::Dvar_FindVar("mapname")->current.string : _fog_vision_id }).get_raw();
-		//	//game::scr_entref_t _visionset_ref = { static_cast<uint16_t>(game::Scr_GetSelf(_execent_ref.u.entityOffset)), 0 };
-		//	//scripting::entity _visionset_ent = { _visionset_ref };
+			//const char* pos = scripting::get_function_pos(/*"maps/mp/_art"*/"scripts/mp/main", "setup_fog");
+			//game::VariableValue _execent_ref = scripting::exec_ent_thread(level, pos, { (strcmp(_fog_vision_id, "") == 0) ? game::Dvar_FindVar("mapname")->current.string : _fog_vision_id }).get_raw();
+			//game::scr_entref_t _visionset_ref = { static_cast<uint16_t>(game::Scr_GetSelf(_execent_ref.u.entityOffset)), 0 };
+			//scripting::entity _visionset_ent = { _visionset_ref };
 
-		//	//scripting::set_entity_field(_visionset_ent, "startdist", _g_fogStartDistReadOnly);
-		//	//scripting::set_entity_field(_visionset_ent, "halfwaydist", _g_fogHalfDistReadOnly);
-		//	//scripting::set_entity_field(_visionset_ent, "red", _g_fogColorReadOnly[0]);
-		//	//scripting::set_entity_field(_visionset_ent, "green", _g_fogColorReadOnly[1]);
-		//	//scripting::set_entity_field(_visionset_ent, "blue", _g_fogColorReadOnly[3]);
-		//	//scripting::set_entity_field(_visionset_ent, "hdrcolorintensity", _g_fogColorIntensityReadOnly);
-		//	//scripting::set_entity_field(_visionset_ent, "maxopacity", _g_fogMaxOpacityReadOnly);
-		//	//scripting::set_entity_field(_visionset_ent, "transitiontime", 0.0);
-		//	//scripting::set_entity_field(_visionset_ent, "sunfogenabled", _g_sunFogEnabledReadOnly);
-		//	//scripting::set_entity_field(_visionset_ent, "sunred", _g_sunFogColorReadOnly[0]);
-		//	//scripting::set_entity_field(_visionset_ent, "sungreen", _g_sunFogColorReadOnly[1]);
-		//	//scripting::set_entity_field(_visionset_ent, "sunblue", _g_sunFogColorReadOnly[3]);
-		//	//scripting::set_entity_field(_visionset_ent, "hdrsuncolorintensity", _g_sunFogColorIntensityReadOnly);
-		//	//scripting::set_entity_field(_visionset_ent, "sundir", _g_sunFogDirReadOnly);
-		//	//scripting::set_entity_field(_visionset_ent, "sunbeginfadeangle", _g_sunFogBeginFadeAngleReadOnly);
-		//	//scripting::set_entity_field(_visionset_ent, "sunendfadeangle", _g_sunFogEndFadeAngleReadOnly);
-		//	//scripting::set_entity_field(_visionset_ent, "normalfogscale", _g_sunFogScaleReadOnly);
-		//	//scripting::set_entity_field(_visionset_ent, "skyfogintensity", _r_sky_fog_intensity);
-		//	//scripting::set_entity_field(_visionset_ent, "skyfogminangle", _r_sky_fog_min_angle);
-		//	//scripting::set_entity_field(_visionset_ent, "skyfogmaxangle", _r_sky_fog_max_angle);
+			//scripting::set_entity_field(_visionset_ent, "startdist", _g_fogStartDistReadOnly);
+			//scripting::set_entity_field(_visionset_ent, "halfwaydist", _g_fogHalfDistReadOnly);
+			//scripting::set_entity_field(_visionset_ent, "red", _g_fogColorReadOnly[0]);
+			//scripting::set_entity_field(_visionset_ent, "green", _g_fogColorReadOnly[1]);
+			//scripting::set_entity_field(_visionset_ent, "blue", _g_fogColorReadOnly[3]);
+			//scripting::set_entity_field(_visionset_ent, "hdrcolorintensity", _g_fogColorIntensityReadOnly);
+			//scripting::set_entity_field(_visionset_ent, "maxopacity", _g_fogMaxOpacityReadOnly);
+			//scripting::set_entity_field(_visionset_ent, "transitiontime", 0.0);
+			//scripting::set_entity_field(_visionset_ent, "sunfogenabled", _g_sunFogEnabledReadOnly);
+			//scripting::set_entity_field(_visionset_ent, "sunred", _g_sunFogColorReadOnly[0]);
+			//scripting::set_entity_field(_visionset_ent, "sungreen", _g_sunFogColorReadOnly[1]);
+			//scripting::set_entity_field(_visionset_ent, "sunblue", _g_sunFogColorReadOnly[3]);
+			//scripting::set_entity_field(_visionset_ent, "hdrsuncolorintensity", _g_sunFogColorIntensityReadOnly);
+			//scripting::set_entity_field(_visionset_ent, "sundir", _g_sunFogDirReadOnly);
+			//scripting::set_entity_field(_visionset_ent, "sunbeginfadeangle", _g_sunFogBeginFadeAngleReadOnly);
+			//scripting::set_entity_field(_visionset_ent, "sunendfadeangle", _g_sunFogEndFadeAngleReadOnly);
+			//scripting::set_entity_field(_visionset_ent, "normalfogscale", _g_sunFogScaleReadOnly);
+			//scripting::set_entity_field(_visionset_ent, "skyfogintensity", _r_sky_fog_intensity);
+			//scripting::set_entity_field(_visionset_ent, "skyfogminangle", _r_sky_fog_min_angle);
+			//scripting::set_entity_field(_visionset_ent, "skyfogmaxangle", _r_sky_fog_max_angle);
 
 
 		//	//const char* _pos = scripting::get_function_pos("common_scripts/utility", "set_fog_to_ent_values_dfog");
@@ -198,16 +198,12 @@ namespace gui::fog_editor
 
 	void build_fog_buffer()
 	{
-		_configs_string = "setexfog %s";
+		_configs_string = "setexpfog %s";
 		auto buffer = utils::string::va(
-			//startDist, halfwayDist, red, green, blue, <HDRcolorIntensity>,  
-			// maxOpacity, <sunRed>, <sunGreen>, <sunBlue>, <HDRsunColorIntensity>, 
-			// <sunMaxOpacity>, <sunDir>, <sunBeginFadeAngle>, <sunEndFadeAngle>, 
-			// <skyFogIntensity>, <skyFogMinAngle>, <skyFogMaxAngle>
 			"%g %g %g %g %g %g %g %.0f 1 %g %g %g %g %g %g %g %g %g %g %g %g %g",
 			_g_fogStartDistReadOnly,
 			M_LN2 / _g_fogHalfDistReadOnly,
-			_g_fogColorReadOnly[0] /255,
+			_g_fogColorReadOnly[0] / 255,
 			_g_fogColorReadOnly[1] / 255,
 			_g_fogColorReadOnly[2] / 255,
 			_g_fogColorIntensityReadOnly,
@@ -361,38 +357,15 @@ namespace gui::fog_editor
 
 		if (ImGui::CollapsingHeader("Exponential Fog"))
 		{
-			/*
-			_g_fogStartDistReadOnly,
-			M_LN2 / _g_fogHalfDistReadOnly,
-			_g_fogColorReadOnly[0] /255,
-			_g_fogColorReadOnly[1] / 255,
-			_g_fogColorReadOnly[2] / 255,
-			_g_fogColorIntensityReadOnly,
-			_g_fogMaxOpacityReadOnly,
-			0.0f, // transition time
-			_g_sunFogColorReadOnly[0] / 255,
-			_g_sunFogColorReadOnly[1] / 255,
-			_g_sunFogColorReadOnly[2] / 255,
-			_g_sunFogColorIntensityReadOnly,
-			_g_sunFogDirReadOnly,
-			_g_sunFogBeginFadeAngleReadOnly,
-			_g_sunFogEndFadeAngleReadOnly,
-			_r_sky_fog_intensity,
-			_r_sky_fog_min_angle,
-			_r_sky_fog_max_angle,
-			_g_heightFogEnabledReadOnly,
-			_g_heightFogBaseHeightReadOnly,
-			_g_heightFogHalfPlaneDistanceReadOnly);
-			*/
 			if(ImGui::DragFloat("start dist", &_g_fogStartDistReadOnly)) build_fog_buffer();
 			if(ImGui::DragFloat("half dist", &_g_fogHalfDistReadOnly)) build_fog_buffer();
-			if(ImGui::DragFloat4("fog color", _g_fogColorReadOnly)) build_fog_buffer();
+			if(ImGui::DragFloat3("fog color", _g_fogColorReadOnly)) build_fog_buffer();
 			if(ImGui::DragFloat("fog color intensity", &_g_fogColorIntensityReadOnly)) build_fog_buffer();
 			if(ImGui::DragFloat("fog max opacity", &_g_fogMaxOpacityReadOnly)) build_fog_buffer();
 			
-			if(ImGui::DragFloat4("sun fog color", _g_sunFogColorReadOnly)) build_fog_buffer();
+			if(ImGui::DragFloat3("sun fog color", _g_sunFogColorReadOnly)) build_fog_buffer();
 			if(ImGui::DragFloat("sun fog color intensity", &_g_sunFogColorIntensityReadOnly)) build_fog_buffer();
-			if(ImGui::DragFloat3("sun fog dir", _g_sunFogDirReadOnly)) build_fog_buffer();
+			if(ImGui::DragFloat2("sun fog dir", _g_sunFogDirReadOnly)) build_fog_buffer();
 			if(ImGui::DragFloat("sun fog begin fade angle", &_g_sunFogBeginFadeAngleReadOnly)) build_fog_buffer();
 			if(ImGui::DragFloat("sun fog end fade angle", &_g_sunFogEndFadeAngleReadOnly)) build_fog_buffer();
 			if(ImGui::DragFloat("sky fog intensity", &_r_sky_fog_intensity)) build_fog_buffer();
