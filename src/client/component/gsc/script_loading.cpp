@@ -250,6 +250,52 @@ namespace gsc
 			}
 		}
 
+		void load_scripts(const std::filesystem::path& root_dir, const std::filesystem::path& subfolder, bool load_from_all_dirs)
+		{
+			std::filesystem::path script_dir = root_dir / subfolder;
+			if (!utils::io::directory_exists(script_dir.generic_string()))
+			{
+				return;
+			}
+
+			std::vector<std::filesystem::path> scripts;
+
+			if (load_from_all_dirs)
+			{
+				for (const auto& entry : std::filesystem::recursive_directory_iterator(script_dir))
+				{
+					if (entry.is_regular_file() && entry.path().extension() == ".gsc")
+					{
+						scripts.push_back(entry.path());
+					}
+				}
+			}
+			else
+			{
+				// Assuming utils::io::list_files returns std::vector<std::string>
+				auto script_files = utils::io::list_files(script_dir.generic_string());
+				for (const auto& script : script_files)
+				{
+					scripts.push_back(std::filesystem::path(script));
+				}
+			}
+
+			for (const auto& script : scripts)
+			{
+				if (!script.generic_string().ends_with(".gsc"))
+				{
+					continue;
+				}
+
+				std::filesystem::path path(script);
+				const auto relative = path.lexically_relative(root_dir).generic_string();
+				const auto base_name = relative.substr(0, relative.size() - 4);
+
+				load_script(base_name);
+			}
+		}
+
+
 		void load_scripts(const std::filesystem::path& root_dir, const std::filesystem::path& subfolder)
 		{
 			std::filesystem::path script_dir = root_dir / subfolder;
@@ -292,14 +338,14 @@ namespace gsc
 			{
 				if (game::environment::is_sp())
 				{
-					load_scripts(path, "scripts/sp/");
+					load_scripts(path, "scripts/sp/", 1);
 					load_scripts(path, "scripts/");
 				}
 				else
 				{
 					if (!game::VirtualLobby_Loaded())
 					{
-						load_scripts(path, "scripts/mp/");
+						load_scripts(path, "scripts/mp/", 1);
 						load_scripts(path, "scripts/");
 					}
 	
