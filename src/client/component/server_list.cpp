@@ -430,22 +430,14 @@ namespace server_list
 	public:
 		void post_unpack() override
 		{
-			if (!game::environment::is_sp())
+			scheduler::once([]()
 			{
-				scheduler::once([]()
-				{
-					// add dvars to change destination master server ip/port
-					master_server_ip = dvars::register_string("masterServerIP", "h1.auroramod.dev", game::DVAR_FLAG_NONE,
-						"IP of the destination master server to connect to");
-					master_server_port = dvars::register_string("masterServerPort", "20810", game::DVAR_FLAG_NONE,
-						"Port of the destination master server to connect to");
-				}, scheduler::pipeline::main);
-			}
-
-			if (!game::environment::is_mp())
-			{
-				return;
-			}
+				// add dvars to change destination master server ip/port
+				master_server_ip = dvars::register_string("masterServerIP", "h1.auroramod.dev", game::DVAR_FLAG_NONE,
+					"IP of the destination master server to connect to");
+				master_server_port = dvars::register_string("masterServerPort", "20810", game::DVAR_FLAG_NONE,
+					"Port of the destination master server to connect to");
+			}, scheduler::pipeline::main);
 
 			// hook LUI_OpenMenu to refresh server list for system link menu
 			lui_open_menu_hook.create(game::LUI_OpenMenu, lui_open_menu_stub);

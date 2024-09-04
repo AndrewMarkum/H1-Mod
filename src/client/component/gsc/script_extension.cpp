@@ -197,13 +197,13 @@ namespace gsc
 			const bool dev_script = developer_script ? developer_script->current.enabled : false;
 			if (!dev_script && !force_error_print)
 			{
-				utils::hook::invoke<void>(SELECT_VALUE(0x415C90_b, 0x59DDA0_b), mark_pos);
+				utils::hook::invoke<void>(0x59DDA0_b, mark_pos);
 				return;
 			}
 
 			console::warn("*********** script runtime error *************\n");
 
-			const auto opcode_id = *reinterpret_cast<std::uint8_t*>(SELECT_VALUE(0xC4015E8_b, 0xB7B8968_b));
+			const auto opcode_id = *reinterpret_cast<std::uint8_t*>(0xB7B8968_b);
 			const std::string error_str = gsc_error_msg.has_value()
 				? utils::string::va(": %s", gsc_error_msg.value().data())
 				: "";
@@ -230,7 +230,7 @@ namespace gsc
 
 			print_callstack();
 			console::warn("**********************************************\n");
-			utils::hook::invoke<void*>(SELECT_VALUE(0x415C90_b, 0x59DDA0_b), mark_pos);
+			utils::hook::invoke<void*>(0x59DDA0_b, mark_pos);
 		}
 
 		void print(const function_args& args)
@@ -328,31 +328,30 @@ namespace gsc
 		{
 			developer_script = dvars::register_bool("developer_script", false, 0, "Enable developer script comments");
 
-			utils::hook::set<uint32_t>(SELECT_VALUE(0x3BD86C_b, 0x50484C_b), 0x1000); // change builtin func count
+			utils::hook::set<uint32_t>(0x50484C_b, 0x1000); // change builtin func count
 
-			utils::hook::set<uint32_t>(SELECT_VALUE(0x3BD872_b, 0x504852_b) + 4,
+			utils::hook::set<uint32_t>(0x504852_b + 4,
 				static_cast<uint32_t>(reverse_b((&func_table))));
-			utils::hook::set<uint32_t>(SELECT_VALUE(0x3CB718_b, 0x512778_b) + 4,
-				static_cast<uint32_t>(reverse_b((&func_table))));
-			utils::hook::inject(SELECT_VALUE(0x3BDC28_b, 0x504C58_b) + 3, &func_table);
-			utils::hook::set<uint32_t>(SELECT_VALUE(0x3BDC1E_b, 0x504C4E_b), sizeof(func_table));
+			utils::hook::set<uint32_t>( 0x512778_b + 4, static_cast<uint32_t>(reverse_b((&func_table))));
+			utils::hook::inject(0x504C58_b + 3, &func_table);
+			utils::hook::set<uint32_t>(0x504C4E_b, sizeof(func_table));
 
-			utils::hook::set<uint32_t>(SELECT_VALUE(0x3BD882_b, 0x504862_b) + 4,
+			utils::hook::set<uint32_t>(0x504862_b + 4,
 				static_cast<uint32_t>(reverse_b((&meth_table))));
-			utils::hook::set<uint32_t>(SELECT_VALUE(0x3CBA3B_b, 0x512A9B_b) + 4,
+			utils::hook::set<uint32_t>(0x512A9B_b + 4,
 				static_cast<uint32_t>(reverse_b(&meth_table)));
-			utils::hook::inject(SELECT_VALUE(0x3BDC36_b, 0x504C66_b) + 3, &meth_table);
-			utils::hook::set<uint32_t>(SELECT_VALUE(0x3BDC3F_b, 0x504C6F_b), sizeof(meth_table));
+			utils::hook::inject(0x504C66_b + 3, &meth_table);
+			utils::hook::set<uint32_t>(0x504C6F_b, sizeof(meth_table));
 
-			utils::hook::nop(SELECT_VALUE(0x3CB723_b, 0x512783_b), 8);
-			utils::hook::call(SELECT_VALUE(0x3CB723_b, 0x512783_b), vm_call_builtin_function_stub);
+			utils::hook::nop(0x512783_b, 8);
+			utils::hook::call(0x512783_b, vm_call_builtin_function_stub);
 
-			utils::hook::call(SELECT_VALUE(0x3CBA12_b, 0x512A72_b), get_entity_id_stub);
-			utils::hook::nop(SELECT_VALUE(0x3CBA46_b, 0x512AA6_b), 6);
-			utils::hook::nop(SELECT_VALUE(0x3CBA4E_b, 0x512AAE_b), 2);
-			utils::hook::call(SELECT_VALUE(0x3CBA46_b, 0x512AA6_b), vm_call_builtin_method_stub);
+			utils::hook::call( 0x512A72_b, get_entity_id_stub);
+			utils::hook::nop(0x512AA6_b, 6);
+			utils::hook::nop(0x512AAE_b, 2);
+			utils::hook::call(0x512AA6_b, vm_call_builtin_method_stub);
 
-			utils::hook::call(SELECT_VALUE(0x3CC9F3_b, 0x513A53_b), vm_error_stub); // LargeLocalResetToMark
+			utils::hook::call(0x513A53_b, vm_error_stub); // LargeLocalResetToMark
 
 			if (game::environment::is_dedi())
 			{
@@ -457,9 +456,7 @@ namespace gsc
 			function::add("typeof", typeof);
 			function::add("type", typeof);
 
-			if (!game::environment::is_sp())
-			{
-				function::add("say", [](const function_args& args)
+			function::add("say", [](const function_args& args)
 				{
 					const auto message = args[0].as<std::string>();
 					game::SV_GameSendServerCommand(-1, game::SV_CMD_CAN_IGNORE, utils::string::va("%c \"%s\"", 84, message.data()));
@@ -467,7 +464,7 @@ namespace gsc
 					return scripting::script_value{};
 				});
 
-				method::add("tell", [](const game::scr_entref_t ent, const function_args& args)
+			method::add("tell", [](const game::scr_entref_t ent, const function_args& args)
 				{
 					if (ent.classnum != 0)
 					{
@@ -486,7 +483,6 @@ namespace gsc
 
 					return scripting::script_value{};
 				});
-			}
 		}
 	};
 }

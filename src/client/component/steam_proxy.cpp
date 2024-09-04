@@ -44,7 +44,7 @@ namespace steam_proxy
 #ifndef DEV_BUILD
 			try
 			{
-				this->start_mod("\xF0\x9F\x8E\xAE" " IW5r: "s + (game::environment::is_sp() ? "Singleplayer" : "Multiplayer"), game::environment::is_sp() ? 393080 : 393100);
+				this->start_mod("\xF0\x9F\x8E\xAE" " IW5r: "s + ("Multiplayer"), 393100);
 			}
 			catch (std::exception& e)
 			{

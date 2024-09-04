@@ -127,7 +127,7 @@ namespace mods
 				utils::io::create_directory("mods");
 			}
 
-			db_release_xassets_hook.create(SELECT_VALUE(0x1F4DB0_b, 0x399740_b), db_release_xassets_stub);
+			db_release_xassets_hook.create(0x399740_b, db_release_xassets_stub);
 
 			dvars::callback::on_new_value("fs_game", [](game::dvar_value* value)
 			{

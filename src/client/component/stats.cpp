@@ -52,11 +52,6 @@ namespace stats
 	public:
 		void post_unpack() override
 		{
-			if (game::environment::is_sp())
-			{
-				return;
-			}
-
 			utils::hook::jump(0x19E6E0_b, is_item_unlocked, true);
 
 			if (game::environment::is_dedi())

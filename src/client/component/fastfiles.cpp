@@ -520,14 +520,7 @@ namespace fastfiles
 
 		const char* get_zone_name(const unsigned int index)
 		{
-			if (game::environment::is_sp())
-			{
-				return game::sp::g_zones[index].name;
-			}
-			else
-			{
-				return game::mp::g_zones[index].name;
-			}
+			return game::mp::g_zones[index].name;
 		}
 
 		utils::hook::detour db_unload_x_zones_hook;
@@ -1157,14 +1150,7 @@ namespace fastfiles
 
 		void reallocate_asset_pools()
 		{
-			if (!game::environment::is_sp())
-			{
-				mp::reallocate_asset_pools();
-			}
-			else
-			{
-				sp::reallocate_asset_pools();
-			}
+			mp::reallocate_asset_pools();
 		}
 
 		utils::hook::detour db_link_x_asset_entry_hook;
@@ -1276,85 +1262,58 @@ namespace fastfiles
 	public:
 		void post_unpack() override
 		{
-			db_try_load_x_file_internal_hook.create(SELECT_VALUE(0x1F5700_b, 0x39A620_b), db_try_load_x_file_internal);
-			db_init_load_x_file_hook.create(SELECT_VALUE(0x1C46E0_b, 0x3681E0_b), db_init_load_x_file_stub);
+			db_try_load_x_file_internal_hook.create(0x39A620_b, db_try_load_x_file_internal);
+			db_init_load_x_file_hook.create(0x3681E0_b, db_init_load_x_file_stub);
 			db_find_xasset_header_hook.create(game::DB_FindXAssetHeader, db_find_xasset_header_stub);
 
-			db_unload_x_zones_hook.create(SELECT_VALUE(0x1F6040_b, 
-				0x39B3C0_b), db_unload_x_zones_stub);
+			db_unload_x_zones_hook.create(0x39B3C0_b, db_unload_x_zones_stub);
 
 			db_print_default_assets = dvars::register_bool("db_printDefaultAssets",
 				false, game::DVAR_FLAG_SAVED, "Print default asset usage");
 
-			if (!game::environment::is_sp())
-			{
 				db_link_x_asset_entry_hook.create(0x396E80_b, db_link_x_asset_entry_stub);
-			}
 
 			g_dump_scripts = dvars::register_bool("g_dumpScripts", false, game::DVAR_FLAG_NONE, "Dump GSC scripts");
 
 			reallocate_asset_pools();
 
 			// Allow loading of unsigned fastfiles & imagefiles
-			if (!game::environment::is_sp())
-			{
-				utils::hook::nop(0x368153_b, 2); // DB_InflateInit
+			utils::hook::nop(0x368153_b, 2); // DB_InflateInit
 
-				image_file_decrypt_value_hook.create(0x367520_b, image_file_decrypt_value_stub);
-				utils::hook::set(0x366F00_b, 0xC301B0);
-			}
+			image_file_decrypt_value_hook.create(0x367520_b, image_file_decrypt_value_stub);
+			utils::hook::set(0x366F00_b, 0xC301B0);
 
-			if (game::environment::is_sp())
-			{
-				// Allow loading mp maps
-				utils::hook::set(0x40AF90_b, 0xC300B0);
-				// Don't sys_error if aipaths are missing
-				utils::hook::call(0x2F8EE9_b, db_find_aipaths_stub);
-			}
-			else
-			{
 				// Allow loading sp maps on mp
 				utils::hook::jump(0x15AFC0_b, get_bsp_filename_stub);
 				utils::hook::call(0x112ED8_b, com_sprintf_stub);
-			}
 
 			// Allow loading of mixed compressor types
-			utils::hook::nop(SELECT_VALUE(0x1C4BE7_b, 0x3687A7_b), 2);
+			utils::hook::nop(0x3687A7_b, 2);
 
 			// Fix compressor type on streamed file load
-			db_read_stream_file_hook.create(SELECT_VALUE(0x1FB9D0_b, 0x3A1BF0_b), db_read_stream_file_stub);
+			db_read_stream_file_hook.create(0x3A1BF0_b, db_read_stream_file_stub);
 
 			// Add custom zone paths
 			sys_createfile_hook.create(game::Sys_CreateFile, sys_create_file_stub);
-			if (!game::environment::is_sp())
-			{
-				db_file_exists_hook.create(0x394DC0_b, db_file_exists_stub);
-			}
+			db_file_exists_hook.create(0x394DC0_b, db_file_exists_stub);
 
 			// load our custom pre_gfx zones
-			utils::hook::call(SELECT_VALUE(0x3862ED_b, 0x15C3FD_b), load_pre_gfx_zones);
-			utils::hook::call(SELECT_VALUE(0x3865E7_b, 0x15C75D_b), load_pre_gfx_zones);
+			utils::hook::call(0x15C3FD_b, load_pre_gfx_zones);
+			utils::hook::call(0x15C75D_b, load_pre_gfx_zones);
 
 			// load our custom ui and common zones
-			utils::hook::call(SELECT_VALUE(0x5634AA_b, 0x686421_b), load_post_gfx_and_ui_and_common_zones);
+			utils::hook::call(0x686421_b, load_post_gfx_and_ui_and_common_zones);
 
 			// load our custom ui zones
-			utils::hook::call(SELECT_VALUE(0x3A5676_b, 0x17C6D2_b), load_ui_zones);
+			utils::hook::call(0x17C6D2_b, load_ui_zones);
 
 			// Don't load extra zones with loadzone
-			if (game::environment::is_sp())
-			{
-				utils::hook::nop(0x1F3FF9_b, 13);
-				utils::hook::jump(0x1F3FF9_b, utils::hook::assemble(sp::skip_extra_zones_stub), true);
-			}
-			else
-			{
-				utils::hook::nop(0x398061_b, 15);
-				utils::hook::jump(0x398061_b, utils::hook::assemble(mp::skip_extra_zones_stub), true);
+			utils::hook::nop(0x398061_b, 15);
+			utils::hook::jump(0x398061_b, utils::hook::assemble(mp::skip_extra_zones_stub), true);
 
-				// dont load localized zone for custom maps
-				utils::hook::call(0x394A99_b, db_level_load_add_zone_stub);
-			}
+			// dont load localized zone for custom maps
+			utils::hook::call(0x394A99_b, db_level_load_add_zone_stub);
+			
 
 			// prevent mod.ff from loading lua files
 			if (game::environment::is_mp())

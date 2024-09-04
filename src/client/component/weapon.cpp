@@ -261,24 +261,21 @@ namespace weapon
 	public:
 		void post_unpack() override
 		{
-			if (!game::environment::is_sp())
-			{
-				// precache all weapons that are loaded in zones
-				g_setup_level_weapon_def_hook.create(0x462630_b, g_setup_level_weapon_def_stub);
+			// precache all weapons that are loaded in zones
+			g_setup_level_weapon_def_hook.create(0x462630_b, g_setup_level_weapon_def_stub);
 
-				// use tag_weapon if tag_weapon_right or tag_knife_attach are not found on model
-				xmodel_get_bone_index_hook.create(0x5C82B0_b, xmodel_get_bone_index_stub);
-				// make custom weapon index mismatch not drop in CG_SetupCustomWeapon
-				utils::hook::call(0x11B9AF_b, cw_mismatch_error_stub);
+			// use tag_weapon if tag_weapon_right or tag_knife_attach are not found on model
+			xmodel_get_bone_index_hook.create(0x5C82B0_b, xmodel_get_bone_index_stub);
+			// make custom weapon index mismatch not drop in CG_SetupCustomWeapon
+			utils::hook::call(0x11B9AF_b, cw_mismatch_error_stub);
 
-				// patch attachment configstring so it will create if not found
-				utils::hook::call(0x41C595_b, g_find_config_string_index_stub);
+			// patch attachment configstring so it will create if not found
+			utils::hook::call(0x41C595_b, g_find_config_string_index_stub);
 
-				utils::hook::call(0x36B4D4_b, load_ddl_asset_stub);
+			utils::hook::call(0x36B4D4_b, load_ddl_asset_stub);
 
-				dvars::register_bool("sv_disableCustomClasses", 
-					false, game::DVAR_FLAG_REPLICATED, "Disable custom classes on server");
-			}
+			dvars::register_bool("sv_disableCustomClasses", 
+				false, game::DVAR_FLAG_REPLICATED, "Disable custom classes on server");
 
 #ifdef DEBUG
 			command::add("setWeaponFieldFloat", [](const command::params& params)

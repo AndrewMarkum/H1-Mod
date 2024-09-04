@@ -3,7 +3,7 @@
 #include "structs.hpp"
 #include "launcher/launcher.hpp"
 
-#define SELECT_VALUE(sp, mp) (game::environment::is_sp() ? (sp) : (mp))
+#define SELECT_VALUE(survival, mp) (game::environment::is_survival() ? (survival) : (mp))
 
 #define SERVER_CD_KEY "H1MOD-CD-Key"
 
@@ -16,7 +16,7 @@ namespace game
 		launcher::mode get_mode();
 		launcher::mode get_real_mode();
 
-		bool is_sp();
+		bool is_survival();
 		bool is_mp();
 		bool is_dedi();
 
@@ -30,18 +30,12 @@ namespace game
 	{
 	public:
 		symbol(const size_t sp_address, const size_t mp_address)
-			: sp_object_(reinterpret_cast<T*>(sp_address))
-			, mp_object_(reinterpret_cast<T*>(mp_address))
+			: mp_object_(reinterpret_cast<T*>(mp_address))
 		{
 		}
 
 		T* get() const
 		{
-			if (environment::is_sp())
-			{
-				return reinterpret_cast<T*>((uint64_t)sp_object_ + base_address);
-			}
-
 			return reinterpret_cast<T*>((uint64_t)mp_object_ + base_address);
 		}
 
@@ -56,7 +50,6 @@ namespace game
 		}
 
 	private:
-		T* sp_object_;
 		T* mp_object_;
 	};
 

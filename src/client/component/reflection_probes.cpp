@@ -401,7 +401,7 @@ namespace reflection_probes
 	public:
 		void post_unpack() override
 		{
-			if (game::environment::is_dedi() || game::environment::is_sp())
+			if (game::environment::is_dedi())
 			{
 				return;
 			}

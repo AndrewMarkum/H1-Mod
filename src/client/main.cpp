@@ -33,11 +33,6 @@ launcher::mode detect_mode_from_arguments()
 		return launcher::mode::multiplayer;
 	}
 
-	if (utils::flags::has_flag("singleplayer"))
-	{
-		return launcher::mode::singleplayer;
-	}
-
 	return launcher::mode::none;
 }
 
@@ -128,9 +123,6 @@ FARPROC load_binary(const launcher::mode mode, uint64_t* base_address)
 	case launcher::mode::server:
 	case launcher::mode::multiplayer:
 		binary = "h1_mp64_ship.exe";
-		break;
-	case launcher::mode::singleplayer:
-		binary = "h1_sp64_ship.exe";
 		break;
 	case launcher::mode::none:
 	default:

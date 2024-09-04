@@ -592,11 +592,6 @@ namespace map_patches
 	public:
 		void post_unpack() override
 		{
-			if (game::environment::is_sp())
-			{
-				return;
-			}
-
 			// skip fx name prefix checks
 			utils::hook::set<uint8_t>(0x2F377D_b, 0xEB); // createfx parse
 			utils::hook::set<uint8_t>(0x4444E0_b, 0xEB); // scr_loadfx

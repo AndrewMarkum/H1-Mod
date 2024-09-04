@@ -153,19 +153,13 @@ namespace binding
 			}
 
 			// write all bindings to config file
-			utils::hook::jump(SELECT_VALUE(0x1AC980_b, 0x199ED0_b), key_write_bindings_to_buffer_stub);
+			utils::hook::jump(0x199ED0_b, key_write_bindings_to_buffer_stub);
 
 			// links a custom command to an index
-			utils::hook::jump(SELECT_VALUE(0x377280_b, 0x1572B0_b), key_get_binding_for_cmd_stub);
+			utils::hook::jump(0x1572B0_b, key_get_binding_for_cmd_stub);
 
 			// execute custom binds
-			cl_execute_key_hook.create(SELECT_VALUE(0x1A8350_b, 0x130610_b), &cl_execute_key_stub);
-
-			if (game::environment::is_sp())
-			{
-				// called from getcommandfromkey in gsc
-				utils::hook::jump(0x3772E0_b, cmd_get_binding_for_key_stub);
-			}
+			cl_execute_key_hook.create(0x130610_b, &cl_execute_key_stub);
 		}
 	};
 }

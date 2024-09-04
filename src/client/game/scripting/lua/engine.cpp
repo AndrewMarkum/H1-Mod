@@ -53,9 +53,9 @@ namespace scripting::lua::engine
 		for (const auto& path : filesystem::get_search_paths_rev())
 		{
 			load_scripts(path + "/scripts/");
-			if (game::environment::is_sp())
+			if (game::environment::is_survival())
 			{
-				load_scripts(path + "/scripts/sp/");
+				load_scripts(path + "/scripts/survival/");
 			}
 			else
 			{

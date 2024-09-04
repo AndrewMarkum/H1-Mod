@@ -82,19 +82,19 @@ namespace gameplay
 
 				a.mov(rax, qword_ptr(reinterpret_cast<int64_t>(&dvars::pm_bouncing)));
 				a.mov(al, byte_ptr(rax, 0x10));
-				a.cmp(byte_ptr(rbp, SELECT_VALUE(-0x5D, -0x7D)), al);
+				a.cmp(byte_ptr(rbp, -0x7D), al);
 
 				a.pop(rax);
 				a.jz(no_bounce);
-				a.jmp(SELECT_VALUE(0x4A2E81_b, 0x2D39C0_b));
+				a.jmp(0x2D39C0_b);
 
 				a.bind(no_bounce);
 				a.cmp(dword_ptr(rsp, 0x44), 0);
 				a.jnz(loc_2D395D);
-				a.jmp(SELECT_VALUE(0x4A2E6F_b, 0x2D39B1_b));
+				a.jmp(0x2D39B1_b);
 
 				a.bind(loc_2D395D);
-				a.jmp(SELECT_VALUE(0x4A2F18_b, 0x2D395D_b));
+				a.jmp(0x2D395D_b);
 			});
 		}
 
@@ -166,11 +166,11 @@ namespace gameplay
 			a.jnz(allsolid);
 
 			a.bind(stand);
-			a.and_(dword_ptr(SELECT_VALUE(r14, r15), 0x54), 0xFFFFFFFD);
-			a.jmp(SELECT_VALUE(0x499628_b, 0x2C9F9D_b));
+			a.and_(dword_ptr(r15, 0x54), 0xFFFFFFFD);
+			a.jmp(0x2C9F9D_b);
 
 			a.bind(allsolid);
-			a.jmp(SELECT_VALUE(0x6878D4_b, 0x2C9F9F_b));
+			a.jmp(0x2C9F9F_b);
 		};
 
 		void client_end_frame_stub2(game::mp::gentity_s* entity)
@@ -321,23 +321,19 @@ namespace gameplay
 		{
 			dvars::player_sustainAmmo = dvars::register_bool("player_sustainAmmo", false,
 				game::DVAR_FLAG_REPLICATED, "Firing weapon will not decrease clip ammo");
-			pm_weapon_use_ammo_hook.create(SELECT_VALUE(0x4AF600_b, 0x2DF830_b), &pm_weapon_use_ammo_stub);
+			pm_weapon_use_ammo_hook.create(0x2DF830_b, &pm_weapon_use_ammo_stub);
 
 			// Influence PM_JitterPoint code flow so the trace->startsolid checks are 'ignored'
-			pm_player_trace_hook.create(SELECT_VALUE(0x4A0A90_b, 0x2D14C0_b), &pm_player_trace_stub);
+			pm_player_trace_hook.create(0x2D14C0_b, &pm_player_trace_stub);
 
 			// If g_enableElevators is 1 the 'ducked' flag will always be removed from the player state
-			utils::hook::jump(SELECT_VALUE(0x499617_b, 0x2C9F90_b), utils::hook::assemble(pm_trace_stub), true);
+			utils::hook::jump(0x2C9F90_b, utils::hook::assemble(pm_trace_stub), true);
 			dvars::g_enableElevators = dvars::register_bool("g_enableElevators", false, game::DVAR_FLAG_REPLICATED, "Enables Elevators");
 
 			dvars::pm_bouncing = dvars::register_bool("pm_bouncing", false,
 				game::DVAR_FLAG_REPLICATED, "Enable bouncing");
-			utils::hook::jump(SELECT_VALUE(0x4A2E5E_b, 0x2D39A4_b), pm_bouncing_stub_mp(), true);
+			utils::hook::jump(0x2D39A4_b, pm_bouncing_stub_mp(), true);
 
-			if (game::environment::is_sp())
-			{
-				return;
-			}
 			
 			utils::hook::nop(0x4006AD_b, 15);
 			utils::hook::jump(0x4006AD_b, g_speed_stub(), true);

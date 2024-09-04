@@ -17,11 +17,6 @@ namespace ranked
 	public:
 		void post_unpack() override
 		{
-			if (game::environment::is_sp())
-			{
-				return;
-			}
-
 			if (game::environment::is_mp())
 			{
 				dvars::override::register_bool("xblive_privatematch", false, game::DVAR_FLAG_REPLICATED);

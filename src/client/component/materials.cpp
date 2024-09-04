@@ -242,24 +242,21 @@ namespace materials
 				return;
 			}
 
-			db_material_streaming_fail_hook.create(SELECT_VALUE(0x1FB400_b, 0x3A1600_b), db_material_streaming_fail_stub);
-			db_get_material_index_hook.create(SELECT_VALUE(0x1F1D80_b, 0x396000_b), db_get_material_index_stub);
+			db_material_streaming_fail_hook.create(0x3A1600_b, db_material_streaming_fail_stub);
+			db_get_material_index_hook.create(0x396000_b, db_get_material_index_stub);
 
 #ifdef DEBUG
-			if (!game::environment::is_sp())
+			material_compare_hook.create(0x693B90_b, material_compare_stub);
+			set_pixel_texture_hook.create(0x6B33E0_b, set_pixel_texture_stub);
+
+			utils::hook::jump(0x6AD55C_b, utils::hook::assemble(print_current_material_stub), true);
+
+			scheduler::once([]
 			{
-				material_compare_hook.create(0x693B90_b, material_compare_stub);
-				set_pixel_texture_hook.create(0x6B33E0_b, set_pixel_texture_stub);
+				debug_materials = dvars::register_bool("debug_materials", false, game::DVAR_FLAG_NONE, "Print current material and images");
+			}, scheduler::main);
 
-				utils::hook::jump(0x6AD55C_b, utils::hook::assemble(print_current_material_stub), true);
-
-				scheduler::once([]
-				{
-					debug_materials = dvars::register_bool("debug_materials", false, game::DVAR_FLAG_NONE, "Print current material and images");
-				}, scheduler::main);
-
-				r_draw_triangles_lit_hook.create(0x666870_b, r_draw_triangles_lit_stub);
-			}
+			r_draw_triangles_lit_hook.create(0x666870_b, r_draw_triangles_lit_stub);
 #endif
 		}
 	};

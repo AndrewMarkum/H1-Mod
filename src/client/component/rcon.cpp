@@ -141,11 +141,6 @@ namespace rcon
 	public:
 		void post_unpack() override
 		{
-			if (game::environment::is_sp())
-			{
-				return;
-			}
-
 			scheduler::once([]()
 			{
 				dvars::register_string("rcon_password", "", game::DvarFlags::DVAR_FLAG_NONE,

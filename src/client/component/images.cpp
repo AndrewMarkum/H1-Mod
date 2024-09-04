@@ -120,8 +120,8 @@ namespace images
 				return;
 			}
 
-			setup_texture_hook.create(SELECT_VALUE(0x83300_b, 0xA4AA0_b), setup_texture_stub);
-			load_texture_hook.create(SELECT_VALUE(0x55F870_b, 0x6829C0_b), load_texture_stub);
+			setup_texture_hook.create(0xA4AA0_b, setup_texture_stub);
+			load_texture_hook.create(0x6829C0_b, load_texture_stub);
 		}
 	};
 }

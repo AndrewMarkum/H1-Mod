@@ -142,7 +142,7 @@ namespace patches
 			}
 
 			// DB_ReadRawFile
-			return utils::hook::invoke<const char*>(SELECT_VALUE(0x1F4D00_b, 0x3994B0_b), filename, buf, size);
+			return utils::hook::invoke<const char*>(0x3994B0_b, filename, buf, size);
 		}
 
 		void bsp_sys_error_stub(const char* error, const char* arg1)
@@ -334,15 +334,15 @@ namespace patches
 		void post_unpack() override
 		{
 			// Register dvars
-			com_register_dvars_hook.create(SELECT_VALUE(0x385BE0_b, 0x15BB60_b), &com_register_dvars_stub);
+			com_register_dvars_hook.create(0x15BB60_b, &com_register_dvars_stub);
 
 			// Unlock fps in main menu
-			utils::hook::set<BYTE>(SELECT_VALUE(0x1B1EAB_b, 0x34396B_b), 0xEB);
+			utils::hook::set<BYTE>(0x34396B_b, 0xEB);
 
 			if (!game::environment::is_dedi())
 			{
 				// Fix mouse lag
-				utils::hook::nop(SELECT_VALUE(0x4631F9_b, 0x5BFF89_b), 6);
+				utils::hook::nop(0x5BFF89_b, 6);
 				scheduler::loop([]()
 				{
 					SetThreadExecutionState(ES_DISPLAY_REQUIRED);
@@ -377,19 +377,19 @@ namespace patches
 			dvars::override::register_int("snd_detectedSpeakerConfig", 0, 0, 100, 0);
 
 			// Allow kbam input when gamepad is enabled
-			utils::hook::nop(SELECT_VALUE(0x1AC0CE_b, 0x135EFB_b), 2);
-			utils::hook::nop(SELECT_VALUE(0x1A9DDC_b, 0x13388F_b), 6);
+			utils::hook::nop(0x135EFB_b, 2);
+			utils::hook::nop(0x13388F_b, 6);
 
 			// Show missing fastfiles
-			utils::hook::call(SELECT_VALUE(0x1F588B_b, 0x39A78E_b), missing_content_error_stub);
+			utils::hook::call(0x39A78E_b, missing_content_error_stub);
 
 			// Allow executing custom cfg files with the "exec" command
-			utils::hook::call(SELECT_VALUE(0x376EB5_b, 0x156D41_b), db_read_raw_file_stub);
+			utils::hook::call(0x156D41_b, db_read_raw_file_stub);
 
 			// Remove useless information from errors + add additional help to common errors
-			utils::hook::call(SELECT_VALUE(0x55E919_b, 0x681A69_b), create_2d_texture_stub_1); 	// Sys_Error for "Create2DTexture( %s, %i, %i, %i, %i ) failed"
-			utils::hook::call(SELECT_VALUE(0x55EACB_b, 0x681C1B_b), create_2d_texture_stub_2); 	// Com_Error for ^
-			utils::hook::call(SELECT_VALUE(0x5B35BA_b, 0x6CB1BC_b), swap_chain_stub); 			// Com_Error for "IDXGISwapChain::Present failed: %s"
+			utils::hook::call(0x681A69_b, create_2d_texture_stub_1); 	// Sys_Error for "Create2DTexture( %s, %i, %i, %i, %i ) failed"
+			utils::hook::call(0x681C1B_b, create_2d_texture_stub_2); 	// Com_Error for ^
+			utils::hook::call(0x6CB1BC_b, swap_chain_stub); 			// Com_Error for "IDXGISwapChain::Present failed: %s"
 
 			// Uncheat protect gamepad-related dvars
 			dvars::override::register_float("gpad_button_deadzone", 0.13f, 0, 1, game::DVAR_FLAG_SAVED);
@@ -398,10 +398,7 @@ namespace patches
 			dvars::override::register_float("gpad_stick_pressed", 0.4f, 0, 1, game::DVAR_FLAG_SAVED);
 			dvars::override::register_float("gpad_stick_pressed_hysteresis", 0.1f, 0, 1, game::DVAR_FLAG_SAVED);
 
-			if (!game::environment::is_sp())
-			{
-				patch_mp();
-			}
+			patch_mp();
 		}
 
 		static void patch_mp()

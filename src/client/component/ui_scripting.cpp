@@ -186,9 +186,9 @@ namespace ui_scripting
 				};
 			}
 
-			game_type["issingleplayer"] = [](const game&)
+			game_type["issurvival"] = [](const game&)
 			{
-				return ::game::environment::is_sp();
+				return ::game::environment::is_survival();
 			};
 
 			game_type["ismultiplayer"] = [](const game&)
@@ -275,49 +275,49 @@ namespace ui_scripting
 				return path.value_or("");
 			};
 
-			if (::game::environment::is_sp())
-			{
-				using player = table;
-				auto player_type = player();
-				lua["player"] = player_type;
+			//if (::game::environment::is_sp())
+			//{
+			//	using player = table;
+			//	auto player_type = player();
+			//	lua["player"] = player_type;
 
-				player_type["notify"] = [](const player&, const std::string& name, const variadic_args& va)
-				{
-					if (!::game::CL_IsCgameInitialized() || !::game::SV_Loaded())
-					{
-						throw std::runtime_error("Not in game");
-					}
+			//	player_type["notify"] = [](const player&, const std::string& name, const variadic_args& va)
+			//	{
+			//		if (!::game::CL_IsCgameInitialized() || !::game::SV_Loaded())
+			//		{
+			//			throw std::runtime_error("Not in game");
+			//		}
 
-					const auto to_string = get_globals()["tostring"];
-					const auto arguments = get_return_values();
-					std::vector<std::string> args{};
-					for (const auto& value : va)
-					{
-						const auto value_str = to_string(value);
+			//		const auto to_string = get_globals()["tostring"];
+			//		const auto arguments = get_return_values();
+			//		std::vector<std::string> args{};
+			//		for (const auto& value : va)
+			//		{
+			//			const auto value_str = to_string(value);
 
-						args.push_back(value_str[0].as<std::string>());
-					}
+			//			args.push_back(value_str[0].as<std::string>());
+			//		}
 
-					::scheduler::once([name, args]()
-					{
-						try
-						{
-							std::vector<scripting::script_value> arguments{};
+			//		::scheduler::once([name, args]()
+			//		{
+			//			try
+			//			{
+			//				std::vector<scripting::script_value> arguments{};
 
-							for (const auto& arg : args)
-							{
-								arguments.push_back(arg);
-							}
+			//				for (const auto& arg : args)
+			//				{
+			//					arguments.push_back(arg);
+			//				}
 
-							const auto player = scripting::call("getentbynum", {0}).as<scripting::entity>();
-							scripting::notify(player, name, arguments);
-						}
-						catch (...)
-						{
-						}
-					}, ::scheduler::pipeline::server);
-				};
-			}
+			//				const auto player = scripting::call("getentbynum", {0}).as<scripting::entity>();
+			//				scripting::notify(player, name, arguments);
+			//			}
+			//			catch (...)
+			//			{
+			//			}
+			//		}, ::scheduler::pipeline::server);
+			//	};
+			//}
 
 			game_type["virtuallobbypresentable"] = [](const game&)
 			{
@@ -461,9 +461,9 @@ namespace ui_scripting
 			for (const auto& path : filesystem::get_search_paths_rev())
 			{
 				load_scripts(path + "/ui_scripts/");
-				if (game::environment::is_sp())
+				if (game::environment::is_survival())
 				{
-					load_scripts(path + "/ui_scripts/sp/");
+					load_scripts(path + "/ui_scripts/survival/");
 				}
 				else
 				{
@@ -626,18 +626,18 @@ namespace ui_scripting
 
 			dvars::register_bool("r_preloadShadersFrontendAllow", true, game::DVAR_FLAG_SAVED, "Allow shader popup on startup");
 
-			utils::hook::call(SELECT_VALUE(0xE7419_b, 0x25E809_b), db_find_x_asset_header_stub);
-			utils::hook::call(SELECT_VALUE(0xE72CB_b, 0x25E6BB_b), db_find_x_asset_header_stub);
+			utils::hook::call(0x25E809_b, db_find_x_asset_header_stub);
+			utils::hook::call(0x25E6BB_b, db_find_x_asset_header_stub);
 
-			hks_load_hook.create(SELECT_VALUE(0xB46F0_b, 0x22C180_b), hks_load_stub);
+			hks_load_hook.create(0x22C180_b, hks_load_stub);
 
-			hks_package_require_hook.create(SELECT_VALUE(0x90070_b, 0x214040_b), hks_package_require_stub);
-			hks_start_hook.create(SELECT_VALUE(0x103C50_b, 0x27A790_b), hks_start_stub);
-			hks_shutdown_hook.create(SELECT_VALUE(0xFB370_b, 0x2707C0_b), hks_shutdown_stub);
+			hks_package_require_hook.create(0x214040_b, hks_package_require_stub);
+			hks_start_hook.create(0x27A790_b, hks_start_stub);
+			hks_shutdown_hook.create(0x2707C0_b, hks_shutdown_stub);
 
 			command::add("lui_restart", []
 			{
-				utils::hook::invoke<void>(SELECT_VALUE(0x1052C0_b, 0x27BEC0_b));
+				utils::hook::invoke<void>(0x27BEC0_b);
 			});
 		}
 	};

@@ -140,7 +140,7 @@ namespace mapents
 		std::string raw_ents;
 		bool load_raw_mapents()
 		{
-			auto mapents_name = utils::string::va("%s.ents", **reinterpret_cast<const char***>(SELECT_VALUE(0xB489D40_b, 0xA975F40_b)));
+			auto mapents_name = utils::string::va("%s.ents", **reinterpret_cast<const char***>(0xA975F40_b));
 			if (filesystem::exists(mapents_name))
 			{
 				try
@@ -175,7 +175,7 @@ namespace mapents
 					return entity_string.data();
 				}
 
-				ents = utils::hook::invoke<const char*>(SELECT_VALUE(0x3685C0_b, 0x4CD140_b));
+				ents = utils::hook::invoke<const char*>(0x4CD140_b);
 			}
 
 			const auto parsed = parse_mapents(ents);
@@ -194,7 +194,7 @@ namespace mapents
 		{
 			entity_string.clear();
 			raw_ents.clear();
-			utils::hook::invoke<void>(SELECT_VALUE(0x368560_b, 0x4CD0E0_b), clip_map);
+			utils::hook::invoke<void>(0x4CD0E0_b, clip_map);
 		}
 	}
 
@@ -203,8 +203,8 @@ namespace mapents
 	public:
 		void post_unpack() override
 		{
-			utils::hook::call(SELECT_VALUE(0x2A1154_b, 0x41F594_b), cm_entity_string_stub);
-			utils::hook::call(SELECT_VALUE(0x1F4E74_b, 0x399814_b), cm_unload_stub);
+			utils::hook::call(0x41F594_b, cm_entity_string_stub);
+			utils::hook::call(0x399814_b, cm_unload_stub);
 		}
 	};
 }

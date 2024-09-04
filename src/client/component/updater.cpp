@@ -290,11 +290,6 @@ namespace updater
 				return "-multiplayer";
 			}
 
-			if (game::environment::is_sp())
-			{
-				return "-singleplayer";
-			}
-
 			return {};
 		}
 

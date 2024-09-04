@@ -229,11 +229,6 @@ namespace network
 		void post_unpack() override
 		{
 			{
-				if (game::environment::is_sp())
-				{
-					return;
-				}
-
 				// redirect dw_sendto to raw socket
 				utils::hook::jump(0x5EEC90_b, dw_send_to_stub);
 				utils::hook::jump(game::Sys_SendPacket, dw_send_to_stub);

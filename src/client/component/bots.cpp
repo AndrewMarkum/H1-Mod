@@ -122,11 +122,6 @@ namespace bots
 	public:
 		void post_unpack() override
 		{
-			if (game::environment::is_sp())
-			{
-				return;
-			}
-
 			get_bot_name_hook.create(game::SV_BotGetRandomName, get_random_bot_name);
 
 			command::add("spawnBot", [](const command::params& params)
