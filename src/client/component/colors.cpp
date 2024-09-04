@@ -163,7 +163,7 @@ namespace colors
 			add(0, 0, 0); // 0  - Black
 			add(255, 49, 49); // 1  - Red
 			add(134, 192, 0); // 2  - Green
-			add(255, 255, 127.5); // 3  - Yellow // updated to match 2011 MW3
+			add(255, 255, 127); // 3  - Yellow // updated to match 2011 MW3
 			add(0, 135, 193); // 4  - Blue
 			add(32, 197, 255); // 5  - Light Blue
 			add(151, 80, 221); // 6  - Pink

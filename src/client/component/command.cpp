@@ -592,7 +592,7 @@ namespace command
 				std::string filename;
 				if (argument.size() == 2)
 				{
-					filename = "h1-mod/";
+					filename = "IW5r/";
 					filename.append(argument[1]);
 					if (!filename.ends_with(".txt"))
 					{
