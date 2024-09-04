@@ -412,7 +412,7 @@ namespace discord
 				handlers.joinRequest = nullptr;
 			}
 
-			Discord_Initialize("947125042930667530", &handlers, 1, nullptr);
+			Discord_Initialize("985570397032427611", &handlers, 1, nullptr);
 
 			if (game::environment::is_mp())
 			{

@@ -249,11 +249,11 @@ namespace steam
 			if (::utils::nt::is_wine())
 			{
 				// let's check the registry to see if the user has already manually selected the Steam installation path
-				if (RegOpenKeyExA(HKEY_CURRENT_USER, "Software\\h1-mod", 0, KEY_QUERY_VALUE, &steam_install_reg) 
+				if (RegOpenKeyExA(HKEY_CURRENT_USER, "Software\\IW5r", 0, KEY_QUERY_VALUE, &steam_install_reg) 
 					!= ERROR_SUCCESS)
 				{
 					// create a registry key
-					if (RegCreateKeyExA(HKEY_CURRENT_USER, "Software\\h1-mod", 0, nullptr, 0, KEY_WRITE, nullptr, &steam_install_reg, nullptr) 
+					if (RegCreateKeyExA(HKEY_CURRENT_USER, "Software\\IW5r", 0, nullptr, 0, KEY_WRITE, nullptr, &steam_install_reg, nullptr) 
 						!= ERROR_SUCCESS)
 					{
 						MSG_BOX_ERROR("Could not create registry for Steam install path.");
