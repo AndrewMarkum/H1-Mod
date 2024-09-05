@@ -29,7 +29,7 @@ namespace game
 	class symbol
 	{
 	public:
-		symbol(const size_t mp_address)
+		symbol(const size_t sp_address, const size_t mp_address)
 			: mp_object_(reinterpret_cast<T*>(mp_address))
 		{
 		}
