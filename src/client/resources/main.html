@@ -18,6 +18,11 @@
             text-align: center;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            position: relative;
+        }
+
+        .hidden {
+            display: none;
         }
 
         .launcher-content {
@@ -84,7 +89,10 @@
             bottom: 0;
             background-color: rgba(77, 166, 255, 0.7);
             color: #ffffff;
+            font-family: 'Arial', sans-serif;
             font-size: 28px;
+            font-weight: bold;
+            font-style: normal;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -150,23 +158,86 @@
         .about-button:hover {
             color: #66b2ff;
         }
+
+        .about-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            background-color: #111;
+            border-radius: 0;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .about-title {
+            font-size: 36px;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        .about-text {
+            font-size: 18px;
+            line-height: 1.5;
+            color: #cccccc;
+            text-align: center;
+            margin-bottom: 20px;
+            max-width: 600px;
+        }
+
+        .about-back-button {
+            font-size: 16px;
+            color: #4da6ff;
+            background-color: transparent;
+            border: 2px solid #4da6ff;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+            text-align: center;
+        }
+
+        .about-back-button:hover {
+            background-color: #4da6ff;
+            color: #111;
+        }
     </style>
 </head>
 <body>
-    <div class="launcher">
-        <div class="launcher-content">
-            <h1 class="game-title">
-                <span class="title-white">IW5</span><span class="title-blue">r</span>
+    <div id="launcher" class="launcher-content">
+        <h1 class="game-title">
+            <span class="title-white">IW5</span><span class="title-blue">r</span>
+        </h1>
+        <div class="buttons-container">
+            <button class="launch-button" onclick="startGame('multiplayer')" data-title="Multiplayer"></button>
+            <button class="launch-button disabled" onclick="" data-title="Coming Soon..." disabled></button>
+        </div>
+        <div class="footer">
+            <span class="version-info">Version 1.0</span>
+            <span class="separator">&#8226;</span>
+            <button class="about-button" onclick="showAbout()">About Us</button>
+        </div>
+    </div>
+
+    <div id="about" class="hidden">
+        <div class="about-container">
+            <h1 class="about-title">
+                <span class="title-white">About </span><span class="title-blue">Us</span>
             </h1>
-            <div class="buttons-container">
-                <button class="launch-button" onclick="startGame('multiplayer')" data-title="Multiplayer"></button>
-                <button class="launch-button disabled" onclick="" data-title="Coming Soon..." disabled></button>
-            </div>
-            <div class="footer">
-                <span class="version-info">Version 1.0</span>
-                <span class="separator">&#8226;</span>
-                <button class="about-button" onclick="showAbout()">About Us</button>
-            </div>
+            <p class="about-text">
+                Welcome to IW5r! We wanted to bring life back to the game we love in a whole new way, from new UI, HUD, Gamemodes, and more...
+
+                Credits to the Aurora Mod and Zonetool development teams. Without them and their support, this project would not have been possible.
+            </p>
+            <button class="about-back-button" onclick="hideAbout()">Back to Launcher</button>
         </div>
     </div>
 
@@ -177,6 +248,14 @@
             } else if (mode === 'survival') {
                 window.external.selectMode(2);
             }
+        }
+
+        function showAbout() {
+            document.getElementById('about').classList.remove('hidden');
+        }
+
+        function hideAbout() {
+            document.getElementById('about').classList.add('hidden');
         }
     </script>
 </body>

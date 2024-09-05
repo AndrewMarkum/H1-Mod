@@ -15,8 +15,7 @@ namespace game
 	{
 		launcher::mode get_mode();
 		launcher::mode get_real_mode();
-
-		bool is_sp();
+		
 		bool is_mp();
 		bool is_dedi();
 
@@ -29,19 +28,13 @@ namespace game
 	class symbol
 	{
 	public:
-		symbol(const size_t sp_address, const size_t mp_address)
-			: sp_object_(reinterpret_cast<T*>(sp_address))
-			, mp_object_(reinterpret_cast<T*>(mp_address))
+		symbol(const size_t mp_address)
+			: mp_object_(reinterpret_cast<T*>(mp_address))
 		{
 		}
 
 		T* get() const
 		{
-			if (environment::is_sp())
-			{
-				return reinterpret_cast<T*>((uint64_t)sp_object_ + base_address);
-			}
-
 			return reinterpret_cast<T*>((uint64_t)mp_object_ + base_address);
 		}
 

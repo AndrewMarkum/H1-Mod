@@ -31,7 +31,7 @@ namespace fastfiles
 
 		utils::concurrency::container<std::vector<HANDLE>> fastfile_handles;
 		bool is_mod_pre_gfx = false;
-
+		bool is_custom_fastfiles_loaded = false;
 		void db_init_load_x_file_stub(game::DBFile* file, std::uint64_t offset)
 		{
 			console::info("Loading fastfile %s\n", file->name);
@@ -167,31 +167,6 @@ namespace fastfiles
 				a.not_(r14d);
 				a.and_(esi, r14d);
 				a.jmp(0x39814F_b);
-			}
-		}
-		namespace sp
-		{
-			void skip_extra_zones_stub(utils::hook::assembler& a)
-			{
-				const auto skip = a.newLabel();
-				const auto original = a.newLabel();
-
-				a.pushad64();
-				a.test(ebp, game::DB_ZONE_CUSTOM); // allocFlags
-				a.jnz(skip);
-
-				a.bind(original);
-				a.popad64();
-				a.mov(r8d, 9);
-				a.mov(rdx, 0x782210_b);
-				a.jmp(0x1F4006_b);
-
-				a.bind(skip);
-				a.popad64();
-				a.mov(r15d, game::DB_ZONE_CUSTOM);
-				a.not_(r15d);
-				a.and_(ebp, r15d);
-				a.jmp(0x1F4023_b);
 			}
 		}
 
@@ -398,6 +373,13 @@ namespace fastfiles
 			// common
 
 			try_load_zone("h1_mod_common", true);
+
+			// load our custom weapon zones
+			try_load_zone("iw5r_attachments", false);
+			try_load_zone("iw5r_arlmg", false);
+			try_load_zone("iw5r_meleelauncher", false);
+			try_load_zone("iw5r_pistolshotgun", false);
+			try_load_zone("iw5r_smgsniper", false);
 
 			game::DB_LoadXAssets(data.data(), static_cast<std::uint32_t>(data.size()), syncMode);
 
@@ -1080,77 +1062,6 @@ namespace fastfiles
 				reallocate_sound_pool();
 				reallocate_asset_pool_multiplier<game::ASSET_TYPE_XANIM, 2>();
 				reallocate_asset_pool_multiplier<game::ASSET_TYPE_LOADED_SOUND, 2>();
-				reallocate_asset_pool_multiplier<game::ASSET_TYPE_LOCALIZE_ENTRY, 2>();
-			}
-		}
-
-		namespace sp
-		{
-			constexpr unsigned int get_asset_type_size(const game::XAssetType type)
-			{
-				constexpr int asset_type_sizes[] =
-				{
-					96, 88, 128, 56, 40, 216,
-					56, 680, 592, 32, 32, 32,
-					32, 32, 2112, 1936, 104,
-					32, 24, 152, 152, 152, 16,
-					64, 640, 40, 16, 136, 24,
-					296, 176, 2864, 48, 0, 24,
-					200, 88, 16, 144, 3616, 56,
-					64, 16, 16, 0, 0, 0, 0, 24,
-					40, 24, 48, 40, 24, 16, 80,
-					128, 2256, 136, 32, 72,
-					24, 64, 88, 48, 32, 96, 152,
-					64, 32, 32,
-				};
-
-				return asset_type_sizes[type];
-			}
-
-			constexpr unsigned int get_pool_type_size(const game::XAssetType type)
-			{
-				constexpr int asset_pool_sizes[] =
-				{
-					128, 1024, 16, 1, 128, 5000, 5248,
-					2560, 10624, 256, 49152, 12288, 12288,
-					72864, 512, 2750, 12000, 16000, 256, 
-					64, 64, 64, 64, 8000, 1, 1, 1, 1,
-					1, 2, 1, 1, 32, 0, 128,
-					400, 0, 11500, 128, 360, 1, 2048,
-					4, 6, 0, 0, 0, 0, 1024,
-					768, 400, 128, 128, 24, 24, 24,
-					32, 128, 2, 0, 64, 384, 128,
-					1, 128, 64, 32, 32, 16, 32, 16,
-				};
-
-				return asset_pool_sizes[type];
-			}
-
-			template <game::XAssetType Type, size_t Size>
-			char* reallocate_asset_pool()
-			{
-				constexpr auto element_size = get_asset_type_size(Type);
-				static char new_pool[element_size * Size] = {0};
-				static_assert(element_size != 0);
-				assert(element_size == game::DB_GetXAssetTypeSize(Type));
-
-				std::memmove(new_pool, game::g_assetPool[Type], game::g_poolSize[Type] * element_size);
-
-				game::g_assetPool[Type] = new_pool;
-				game::g_poolSize[Type] = Size;
-
-				return new_pool;
-			}
-
-			template <game::XAssetType Type, size_t Multiplier>
-			char* reallocate_asset_pool_multiplier()
-			{
-				constexpr auto pool_size = get_pool_type_size(Type);
-				return reallocate_asset_pool<Type, pool_size* Multiplier>();
-			}
-
-			void reallocate_asset_pools()
-			{
 				reallocate_asset_pool_multiplier<game::ASSET_TYPE_LOCALIZE_ENTRY, 2>();
 			}
 		}
