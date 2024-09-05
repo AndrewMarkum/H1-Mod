@@ -30,7 +30,7 @@
 #define ERR_DOWNLOAD_FAIL "Failed to download file %s:\n%s"
 #define ERR_WRITE_FAIL "Failed to write file "
 
-#define BINARY_NAME "IW5r.exe"
+#define BINARY_NAME "h1-mod.exe"
 
 namespace updater
 {

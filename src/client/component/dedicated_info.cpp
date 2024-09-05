@@ -24,7 +24,7 @@ namespace dedicated_info
 				const auto sv_running = game::Dvar_FindVar("sv_running");
 				if (!sv_running || !sv_running->current.enabled || (*game::mp::svs_clients) == nullptr)
 				{
-					SetConsoleTitle("IW5r Dedicated Server");
+					SetConsoleTitle("H1-Mod Dedicated Server");
 					return;
 				}
 

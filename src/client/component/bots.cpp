@@ -77,7 +77,7 @@ namespace bots
 
 		void load_bot_data()
 		{
-			static const char* bots_txt = "IW5r/bots.txt";
+			static const char* bots_txt = "h1-mod/bots.txt";
 
 			std::string bots_content;
 			if (!utils::io::read_file(bots_txt, &bots_content))

@@ -27,9 +27,9 @@ namespace utils
 				return success;
 			}
 
-			instance->setAppName(L"IW5r");
+			instance->setAppName(L"H1-Mod");
 			instance->setAppUserModelId(
-				WinToastLib::WinToast::configureAUMI(L"IW5r", L"H1", L"", L"20201212"));
+				WinToastLib::WinToast::configureAUMI(L"H1-Mod", L"H1", L"", L"20201212"));
 
 			WinToastLib::WinToast::WinToastError error;
 			success = instance->initialize(&error);
