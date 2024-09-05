@@ -70,11 +70,11 @@ namespace map_patches
 		};
 
 		//WEAK game::symbol<bool(const game::GfxLightGrid* lightGrid, const game::GfxLightGridEntry* entry, int cornerIndex, const unsigned int* pos, const float* samplePos)> R_IsValidLightGridSample{ 0x0, 0x6D7E40 };
-		WEAK game::symbol<void(float*)> Vec3Normalize{0x0, 0x68D20};
-		WEAK game::symbol<int(int, float const* const, float const* const, struct game::Bounds const*, unsigned int, int)> SV_BrushModelSightTrace{0x0, 0x3370A0};
+		WEAK game::symbol<void(float*)> Vec3Normalize{0x68D20};
+		WEAK game::symbol<int(int, float const* const, float const* const, struct game::Bounds const*, unsigned int, int)> SV_BrushModelSightTrace{0x3370A0};
 
-		game::symbol<game::ComWorld> comWorld{0x0, 0xA97C0E0};
-		game::symbol<game::GfxWorld*> s_world{0x0, 0xE973AE0};
+		game::symbol<game::ComWorld> comWorld{0xA97C0E0};
+		game::symbol<game::GfxWorld*> s_world{0xE973AE0};
 
 		bool R_IsBetterPrimaryLightEnv(unsigned short oldPrimaryLightEnvIndex, unsigned short newPrimaryLightEnvIndex, float oldWeight, float newWeight)
 		{
