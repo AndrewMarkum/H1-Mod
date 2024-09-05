@@ -123,7 +123,7 @@ namespace game
 			return get_mode() == launcher::mode::singleplayer;
 		}
 
-		bool is_cp()
+		bool is_coop()
 		{
 			return get_mode() == launcher::mode::survival;
 		}
