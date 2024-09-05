@@ -254,17 +254,27 @@ namespace scripting
 	public:
 		void post_unpack() override
 		{
-			vm_notify_hook.create(0x514560_b, vm_notify_stub);
+			vm_notify_hook.create(SELECT_VALUE(0x3CD500_b, 0x514560_b), vm_notify_stub);
 
-			scr_add_class_field_hook.create(0x50AE20_b, scr_add_class_field_stub);
+			scr_add_class_field_hook.create(SELECT_VALUE(0x3C3CE0_b, 0x50AE20_b), scr_add_class_field_stub);
 
-			scr_set_thread_position_hook.create(0x504870_b, scr_set_thread_position_stub);
-			process_script_hook.create(0x50E340_b, process_script_stub);
+			scr_set_thread_position_hook.create(SELECT_VALUE(0x3BD890_b, 0x504870_b), scr_set_thread_position_stub);
+			process_script_hook.create(SELECT_VALUE(0x3C7200_b, 0x50E340_b), process_script_stub);
 			sl_get_canonical_string_hook.create(game::SL_GetCanonicalString, sl_get_canonical_string_stub);
 
-			g_load_structs_hook.create(0x458520_b, g_load_structs_stub);
-			scr_load_level_hook.create(0x450FC0_b, scr_load_level_stub);
-			g_shutdown_game_hook.create(0x422F30_b, g_shutdown_game_stub);
+			g_load_structs_hook.create(SELECT_VALUE(0x2E7970_b, 0x458520_b), g_load_structs_stub);
+			scr_load_level_hook.create(SELECT_VALUE(0x2D4CD0_b, 0x450FC0_b), scr_load_level_stub);
+			if (game::environment::is_sp())
+			{
+				vm_execute_hook.create(0x3CA080_b, vm_execute_stub);
+			}
+
+			g_shutdown_game_hook.create(SELECT_VALUE(0x2A5130_b, 0x422F30_b), g_shutdown_game_stub);
+
+			if (game::environment::is_sp())
+			{
+				utils::hook::call(0x28AE82_b, get_spawn_point_stub);
+			}
 
 			scheduler::loop([]
 			{

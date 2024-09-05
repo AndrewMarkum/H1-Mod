@@ -42,7 +42,8 @@ namespace imagefiles
 			{
 				if (index != CUSTOM_IMAGE_FILE_INDEX)
 				{
-					return &reinterpret_cast<image_file_unk*>(0x6306770_b)[index];
+					return &reinterpret_cast<image_file_unk*>(
+						SELECT_VALUE(0x4802090_b, 0x6306770_b))[index];
 				}
 
 				const auto name = get_image_file_name();
@@ -70,7 +71,8 @@ namespace imagefiles
 			{
 				if (index != CUSTOM_IMAGE_FILE_INDEX)
 				{
-					return &reinterpret_cast<image_file_unk*>(0x6306770_b)[index];
+					return &reinterpret_cast<image_file_unk*>(
+						SELECT_VALUE(0x4802090_b, 0x6306770_b))[index];
 				}
 
 				const auto name = get_image_file_name();
@@ -89,7 +91,8 @@ namespace imagefiles
 		{
 			if (index != CUSTOM_IMAGE_FILE_INDEX)
 			{
-				return reinterpret_cast<game::DB_IFileSysFile**>(0x6306180_b)[index];
+				return reinterpret_cast<game::DB_IFileSysFile**>(
+					SELECT_VALUE(0x4801D80_b, 0x6306180_b))[index];
 			}
 
 			const auto name = get_image_file_name();
@@ -106,7 +109,7 @@ namespace imagefiles
 			a.push(rax);
 			a.pushad64();
 			a.mov(rcx, rax);
-			a.call_aligned(mp::get_image_file_unk_mp);
+			a.call_aligned(SELECT_VALUE(sp::get_image_file_unk_mp, mp::get_image_file_unk_mp));
 			a.mov(qword_ptr(rsp, 0x80), rax);
 			a.popad64();
 			a.pop(rax);
@@ -126,10 +129,10 @@ namespace imagefiles
 
 			a.cmp(r12, r13);
 			a.jnz(handle_is_open);
-			a.jmp(0x3A0CA5_b);
+			a.jmp(SELECT_VALUE(0x1FAD49_b, 0x3A0CA5_b));
 
 			a.bind(handle_is_open);
-			a.jmp(0x3A0CF5_b);
+			a.jmp(SELECT_VALUE(0x1FAD99_b, 0x3A0CF5_b));
 		}
 
 		void* pakfile_open_stub(void* /*handles*/, unsigned int count, int is_imagefile, 
@@ -139,7 +142,11 @@ namespace imagefiles
 
 			if (index != CUSTOM_IMAGE_FILE_INDEX)
 			{
-				return utils::hook::invoke<void*>(0x5B2030_b, 0x6306180_b, count, is_imagefile, index, is_localized);
+				return utils::hook::invoke<void*>(
+					SELECT_VALUE(0x42BC00_b, 0x5B2030_b),
+					SELECT_VALUE(0x4801D80_b, 0x6306180_b), 
+					count, is_imagefile, index, is_localized
+				);
 			}
 
 			const auto name = get_image_file_name();
@@ -197,8 +204,16 @@ namespace imagefiles
 		}
 
 		image_file_handles.erase(fastfile);
-		image_file_allocator.free(mp::image_file_unk_map[fastfile]);
-		mp::image_file_unk_map.erase(fastfile);
+		if (game::environment::is_sp())
+		{
+			image_file_allocator.free(sp::image_file_unk_map[fastfile]);
+			sp::image_file_unk_map.erase(fastfile);
+		}
+		else
+		{
+			image_file_allocator.free(mp::image_file_unk_map[fastfile]);
+			mp::image_file_unk_map.erase(fastfile);
+		}
 	}
 
 	class component final : public component_interface
@@ -206,10 +221,10 @@ namespace imagefiles
 	public:
 		void post_unpack() override
 		{
-			utils::hook::jump(0x3A0C95_b,
+			utils::hook::jump(SELECT_VALUE(0x1FAD35_b, 0x3A0C95_b),
 				utils::hook::assemble(db_create_gfx_image_stream_stub), true);
-			utils::hook::call(0x3A0CD7_b, pakfile_open_stub);
-			utils::hook::call(0x3A0CB9_b, com_sprintf_stub);
+			utils::hook::call(SELECT_VALUE(0x1FAD7B_b, 0x3A0CD7_b), pakfile_open_stub);
+			utils::hook::call(SELECT_VALUE(0x1FAD5D_b, 0x3A0CB9_b), com_sprintf_stub);
 		}
 	};
 }

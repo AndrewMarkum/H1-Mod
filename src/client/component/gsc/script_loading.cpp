@@ -286,13 +286,13 @@ namespace gsc
 
 		void load_gametype_script_stub(void* a1, void* a2)
 		{
-			utils::hook::invoke<void>(0x18BC00_b, a1, a2);
+			utils::hook::invoke<void>(SELECT_VALUE(0x2B9DA0_b, 0x18BC00_b), a1, a2);
 
 			for (const auto& path : filesystem::get_search_paths())
 			{
-				if (game::environment::is_survival())
+				if (game::environment::is_sp())
 				{
-					load_scripts(path, "scripts/survival/");
+					load_scripts(path, "scripts/sp/");
 					load_scripts(path, "scripts/");
 				}
 				else

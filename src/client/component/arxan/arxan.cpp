@@ -228,13 +228,27 @@ namespace arxan
 #ifdef PRECOMPUTED_INTEGRITY_CHECKS
 		void search_and_patch_integrity_checks_precomputed()
 		{
-			for (const auto i : mp::intact_integrity_check_blocks)
+			if (game::environment::is_sp())
 			{
-				patch_intact_basic_block_integrity_check(reinterpret_cast<void*>(i));
+				for (const auto i : sp::intact_integrity_check_blocks)
+				{
+					patch_intact_basic_block_integrity_check(reinterpret_cast<void*>(i));
+				}
+				for (const auto i : sp::split_integrity_check_blocks)
+				{
+					patch_split_basic_block_integrity_check(reinterpret_cast<void*>(i));
+				}
 			}
-			for (const auto i : mp::split_integrity_check_blocks)
+			else
 			{
-				patch_split_basic_block_integrity_check(reinterpret_cast<void*>(i));
+				for (const auto i : mp::intact_integrity_check_blocks)
+				{
+					patch_intact_basic_block_integrity_check(reinterpret_cast<void*>(i));
+				}
+				for (const auto i : mp::split_integrity_check_blocks)
+				{
+					patch_split_basic_block_integrity_check(reinterpret_cast<void*>(i));
+				}
 			}
 		}
 #endif
@@ -486,6 +500,12 @@ namespace arxan
 					return;
 				}
 				once = true;
+
+				// sp has no breakpoints
+				if (game::environment::is_sp())
+				{
+					return;
+				}
 
 #ifdef PRECOMPUTED_BREAKPOINTS
 				assert(game::base_address == 0x140000000);

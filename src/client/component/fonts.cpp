@@ -114,7 +114,7 @@ namespace fonts
 			}
 
 			data_.fonts.clear();
-			utils::hook::set<int>(0xE962188_b, 0); // reset registered font count
+			utils::hook::set<int>(SELECT_VALUE(0xF793E38_b, 0xE962188_b), 0); // reset registered font count
 		});
 	}
 
@@ -128,7 +128,7 @@ namespace fonts
 				return;
 			}
 
-			utils::hook::call(0x67F6E6_b, db_find_xasset_header_stub);
+			utils::hook::call(SELECT_VALUE(0x55C596_b, 0x67F6E6_b), db_find_xasset_header_stub);
 		}
 	};
 }

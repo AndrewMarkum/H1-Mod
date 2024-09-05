@@ -7,9 +7,12 @@ public:
 	enum class mode
 	{
 		none,
-		survival,
+		singleplayer,
 		multiplayer,
 		server,
+		// Surrogates
+		survival,
+		zombies,
 	};
 
 	launcher();

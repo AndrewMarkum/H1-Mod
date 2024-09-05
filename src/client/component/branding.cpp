@@ -79,7 +79,8 @@ namespace branding
 			}, scheduler::renderer);
 			scheduler::loop(draw_branding, scheduler::renderer);
 
-			ui_get_formatted_build_number_hook.create(0x1DF300_b, ui_get_formatted_build_number_stub);
+			ui_get_formatted_build_number_hook.create(
+				SELECT_VALUE(0x406EC0_b, 0x1DF300_b), ui_get_formatted_build_number_stub);
 		}
 	};
 }

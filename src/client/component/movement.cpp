@@ -155,6 +155,11 @@ namespace movement
 	public:
 		void post_unpack() override
 		{
+			if (game::environment::is_sp())
+			{
+				return;
+			}
+
 			pm_airmove_hook.create(0x2C93B0_b, pm_airmove_stub);
 
 			pm_cs_airAccelerate = dvars::register_float("pm_cs_airAccelerate", 100.0f, 1.0f, 500.0f,

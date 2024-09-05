@@ -201,8 +201,15 @@ namespace command
 
 		void client_println(int client_num, const std::string& text)
 		{
-			game::SV_GameSendServerCommand(client_num, game::SV_CMD_RELIABLE,
-				utils::string::va("f \"%s\"", text.data()));
+			if (game::environment::is_sp())
+			{
+				game::CG_GameMessage(0, text.data());
+			}
+			else
+			{
+				game::SV_GameSendServerCommand(client_num, game::SV_CMD_RELIABLE,
+					utils::string::va("f \"%s\"", text.data()));
+			}
 		}
 
 		bool check_cheats(int client_num)
@@ -253,7 +260,10 @@ namespace command
 					}
 					else
 					{
-						const auto amount = atoi(game::Dvar_FindVar("scr_player_maxhealth")->current.string);
+						const auto amount = SELECT_VALUE(
+							game::Dvar_FindVar("g_player_maxhealth")->current.integer,
+							atoi(game::Dvar_FindVar("scr_player_maxhealth")->current.string)
+						);
 						player.set("health", {amount});
 					}
 				}
@@ -337,7 +347,7 @@ namespace command
 				try
 				{
 					const auto player = scripting::entity({static_cast<uint16_t>(client_num), 0});
-					player.call("suicide");
+					player.call(SELECT_VALUE("kill", "suicide"));
 				}
 				catch (...)
 				{
@@ -551,10 +561,17 @@ namespace command
 	public:
 		void post_unpack() override
 		{
-			utils::hook::call(0x15C44B_b, parse_commandline_stub);
-			add_commands_mp();
+			if (game::environment::is_sp())
+			{
+				add_commands_sp();
+			}
+			else
+			{
+				utils::hook::call(0x15C44B_b, parse_commandline_stub);
+				add_commands_mp();
+			}
 
-			utils::hook::jump(0x4E9F40_b, dvar_command_stub, true);
+			utils::hook::jump(SELECT_VALUE(0x3A7C80_b, 0x4E9F40_b), dvar_command_stub, true);
 
 			add_commands_generic();
 		}
@@ -666,6 +683,99 @@ namespace command
 				}
 
 				execute(dvar->current.string);
+			});
+		}
+
+		static void add_commands_sp()
+		{
+			add("god", []()
+			{
+				if (!game::SV_Loaded())
+				{
+					return;
+				}
+
+				toggle_entity_flag(1, "godmode");
+			});
+
+			add("demigod", []()
+			{
+				if (!game::SV_Loaded())
+				{
+					return;
+				}
+
+				toggle_entity_flag(2, "demigod mode");
+			});
+
+			add("notarget", []()
+			{
+				if (!game::SV_Loaded())
+				{
+					return;
+				}
+
+				toggle_entity_flag(4, "notarget");
+			});
+
+			add("noclip", []()
+			{
+				if (!game::SV_Loaded())
+				{
+					return;
+				}
+
+				toggle_client_flag(1, "noclip");
+			});
+
+			add("ufo", []()
+			{
+				if (!game::SV_Loaded())
+				{
+					return;
+				}
+
+				toggle_client_flag(2, "ufo");
+			});
+
+			add("dropweapon", [](const params& params)
+			{
+				if (!game::SV_Loaded())
+				{
+					return;
+				}
+
+				cmd_drop_weapon(0);
+			});
+
+			add("take", [](const params& params)
+			{
+				if (!game::SV_Loaded())
+				{
+					return;
+				}
+
+				cmd_take_weapon(0, params.get_all());
+			});
+
+			add("kill", [](const params& params)
+			{
+				if (!game::SV_Loaded())
+				{
+					return;
+				}
+
+				cmd_kill(0);
+			});
+			
+			add("give", [](const params& params)
+			{
+				if (!game::SV_Loaded())
+				{
+					return;
+				}
+
+				cmd_give_weapon(0, params.get_all());
 			});
 		}
 

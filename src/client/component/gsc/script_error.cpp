@@ -325,26 +325,29 @@ namespace gsc
 	public:
 		void post_unpack() override
 		{
-			scr_emit_function_hook.create(0x504660_b, &scr_emit_function_stub);
+			scr_emit_function_hook.create(SELECT_VALUE(0x3BD680_b, 0x504660_b), &scr_emit_function_stub);
 
-			utils::hook::call(0x504606_b, compile_error_stub); // CompileError (LinkFile)
-			utils::hook::call(0x504652_b, compile_error_stub); // ^
-			utils::hook::call(0x50473A_b, find_variable_stub); // Scr_EmitFunction
+			utils::hook::call(SELECT_VALUE(0x3BD626_b, 0x504606_b), compile_error_stub); // CompileError (LinkFile)
+			utils::hook::call(SELECT_VALUE(0x3BD672_b, 0x504652_b), compile_error_stub); // ^
+			utils::hook::call(SELECT_VALUE(0x3BD75A_b, 0x50473A_b), find_variable_stub); // Scr_EmitFunction
 
 			// Restore basic error messages for commonly used scr functions
-			utils::hook::jump(0x50F9E0_b, scr_get_object);
-			utils::hook::jump(0x50F560_b, scr_get_const_string);
-			utils::hook::jump(0x50F320_b, scr_get_const_istring);
-			utils::hook::jump(0x452EF0_b, scr_validate_localized_string_ref);
-			utils::hook::jump(0x50FF20_b, scr_get_vector);
-			utils::hook::jump(0x50F920_b, scr_get_int);
-			utils::hook::jump(0x50F870_b, scr_get_float);
+			utils::hook::jump(SELECT_VALUE(0x3C89F0_b, 0x50F9E0_b), scr_get_object);
+			utils::hook::jump(SELECT_VALUE(0x3C84C0_b, 0x50F560_b), scr_get_const_string);
+			utils::hook::jump(SELECT_VALUE(0x3C8280_b, 0x50F320_b), scr_get_const_istring);
+			utils::hook::jump(SELECT_VALUE(0x2D6950_b, 0x452EF0_b), scr_validate_localized_string_ref);
+			utils::hook::jump(SELECT_VALUE(0x3C8F30_b, 0x50FF20_b), scr_get_vector);
+			utils::hook::jump(SELECT_VALUE(0x3C8930_b, 0x50F920_b), scr_get_int);
+			utils::hook::jump(SELECT_VALUE(0x3C87D0_b, 0x50F870_b), scr_get_float);
 
-			utils::hook::jump(0x50FC00_b, scr_get_pointer_type);
-			utils::hook::jump(0x50FDD0_b, scr_get_type);
-			utils::hook::jump(0x50FE40_b, scr_get_type_name);
+			utils::hook::jump(SELECT_VALUE(0x3C8C10_b, 0x50FC00_b), scr_get_pointer_type);
+			utils::hook::jump(SELECT_VALUE(0x3C8DE0_b, 0x50FDD0_b), scr_get_type);
+			utils::hook::jump(SELECT_VALUE(0x3C8E50_b, 0x50FE40_b), scr_get_type_name);
 
-			safe_func<0xBA7A0>(); // fix vlobby cac crash
+			if (!game::environment::is_sp())
+			{
+				safe_func<0xBA7A0>(); // fix vlobby cac crash
+			}
 		}
 
 		void pre_destroy() override

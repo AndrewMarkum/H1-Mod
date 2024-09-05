@@ -46,6 +46,11 @@ namespace security
 	public:
 		void post_unpack() override
 		{
+			if (game::environment::is_sp())
+			{
+				return;
+			}
+
 			// Patch vulnerability in PlayerCards_SetCachedPlayerData
 			utils::hook::call(0xF4632_b, set_cached_playerdata_stub);
 

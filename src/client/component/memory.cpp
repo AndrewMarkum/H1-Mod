@@ -88,7 +88,7 @@ namespace memory
 			pmem_init();
 
 			const auto script_mem_size = script_mem_low_size + script_mem_high_size;
-			utils::hook::set<uint32_t>(0x5A5582_b, static_cast<uint32_t>(script_mem_size));
+			utils::hook::set<uint32_t>(SELECT_VALUE(0x420252_b, 0x5A5582_b), static_cast<uint32_t>(script_mem_size));
 		}
 	}
 
@@ -110,7 +110,7 @@ namespace memory
 				va_end(ap);
 			}
 
-			return utils::hook::invoke<int>(0x5AF0F0_b, dest, size, "%s", buffer);
+			return utils::hook::invoke<int>(SELECT_VALUE(0x429200_b, 0x5AF0F0_b), dest, size, "%s", buffer);
 		}
 	}
 
@@ -120,10 +120,10 @@ namespace memory
 		void post_unpack() override
 		{
 			// patch PMem_Init, so we can use whatever memory size we want
-			utils::hook::call(0x15C4D6_b, pmem_init_stub);
+			utils::hook::call(SELECT_VALUE(0x38639C_b, 0x15C4D6_b), pmem_init_stub);
 
 			// Com_sprintf for "Out of memory. You are probably low on disk space."
-			utils::hook::call(0x1D8E09_b, out_of_memory_text_stub);
+			utils::hook::call(SELECT_VALUE(0x457BC9_b, 0x1D8E09_b), out_of_memory_text_stub);
 		}
 	};
 }

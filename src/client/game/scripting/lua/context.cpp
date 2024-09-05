@@ -209,6 +209,11 @@ namespace scripting::lua
 		{
 			state["level"] = entity{*game::levelEntityId};
 
+			if (game::environment::is_sp())
+			{
+				state["player"] = call("getentbynum", {0}).as<entity>();
+			}
+
 			auto entity_type = state.new_usertype<entity>("entity");
 
 			for (auto const& func : gsc::gsc_ctx->meth_map())

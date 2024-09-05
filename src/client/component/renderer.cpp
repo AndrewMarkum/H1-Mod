@@ -137,15 +137,15 @@ namespace renderer
 		{
 			const auto is_zero = a.newLabel();
 
-			a.mov(rax, qword_ptr(0x111DC230_b));
+			a.mov(rax, qword_ptr(SELECT_VALUE(0x123FFF30_b, 0x111DC230_b)));
 			a.test(rax, rax);
 			a.jz(is_zero);
 
 			a.mov(rcx, qword_ptr(rax, 0x540C68));
-			a.jmp(0x6E76FF_b);
+			a.jmp(SELECT_VALUE(0x5CF1FF_b, 0x6E76FF_b));
 
 			a.bind(is_zero);
-			a.jmp(0x6E7722_b);
+			a.jmp(SELECT_VALUE(0x5CF20A_b, 0x6E7722_b));
 		}
 	}
 	

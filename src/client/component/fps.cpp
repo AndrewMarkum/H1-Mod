@@ -223,7 +223,7 @@ namespace fps
 
 			if (game::environment::is_mp())
 			{
-				utils::hook::jump(0x343847_b, utils::hook::assemble([](utils::hook::assembler& a)
+				utils::hook::jump(SELECT_VALUE(0, 0x343847_b), utils::hook::assemble([](utils::hook::assembler& a)
 				{
 					a.pushad64();
 					a.call_aligned(perf_update);
@@ -238,6 +238,14 @@ namespace fps
 				// Don't register cg_drawfps
 				utils::hook::nop(0x31D74F_b, 0x1C);
 				utils::hook::nop(0x31D76F_b, 0x7);
+			}
+			else
+			{
+				sub_5D6810_hook.create(0x5D6810_b, sub_5D6810_stub);
+
+				// Don't register cg_drawfps
+				utils::hook::nop(0x15C97D_b, 0x20);
+				utils::hook::nop(0x15C9A1_b, 0x7);
 			}
 
 			scheduler::loop(cg_draw_fps, scheduler::pipeline::renderer);
@@ -259,8 +267,8 @@ namespace fps
 
 			// Make fps capping accurate
 			com_wait_end_frame_mode = dvars::register_int("com_waitEndFrameMode", 0, 0, 2, game::DVAR_FLAG_SAVED, "Wait end frame mode (0 = default, 1 = sleep(n), 2 = loop sleep(0)");
-			r_wait_end_time_hook.create(0x1C2420_b, r_wait_end_frame_stub);
-			com_frame_hook.create(0x15A960_b, com_frame_stub);
+			r_wait_end_time_hook.create(SELECT_VALUE(0x3A7330_b, 0x1C2420_b), r_wait_end_frame_stub);
+			com_frame_hook.create(SELECT_VALUE(0x385210_b, 0x15A960_b), com_frame_stub);
 		}
 	};
 }

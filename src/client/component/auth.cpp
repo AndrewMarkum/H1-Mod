@@ -231,14 +231,24 @@ namespace auth
 	public:
 		void post_unpack() override
 		{
-			// kill "disconnected from steam" error
-			utils::hook::nop(0x1D61DF_b, 0x11);
+			// Patch steam id bit check
+			if (game::environment::is_sp())
+			{
+				utils::hook::jump(0x4FA1B3_b, 0x4FA21A_b, true);
+				utils::hook::jump(0x4FB272_b, 0x4FB2B7_b, true);
+				utils::hook::jump(0x4FB781_b, 0x4FB7D3_b, true);
+			}
+			else
+			{
+				// kill "disconnected from steam" error
+				utils::hook::nop(0x1D61DF_b, 0x11);
 
-			utils::hook::jump(0x1CAE70_b, get_direct_connect_stub(), true);
-			utils::hook::jump(0x12D426_b, get_send_connect_data_stub(), true);
+				utils::hook::jump(0x1CAE70_b, get_direct_connect_stub(), true);
+				utils::hook::jump(0x12D426_b, get_send_connect_data_stub(), true);
 
-			// Don't instantly timeout the connecting client ? not sure about this
-			utils::hook::set(0x12D93C_b, 0xC3);
+				// Don't instantly timeout the connecting client ? not sure about this
+				utils::hook::set(0x12D93C_b, 0xC3);
+			}
 
 			command::add("guid", []
 			{

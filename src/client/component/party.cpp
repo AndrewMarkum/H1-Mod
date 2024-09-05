@@ -76,6 +76,11 @@ namespace party
 
 		void connect_to_party(const game::netadr_s& target, const std::string& mapname, const std::string& gametype)
 		{
+			if (game::environment::is_sp())
+			{
+				return;
+			}
+
 			if (game::Live_SyncOnlineDataFlags(0) != 0)
 			{
 				// initialize the game after onlinedataflags is 32 (workaround)
@@ -677,6 +682,11 @@ namespace party
 
 	void connect(const game::netadr_s& target)
 	{
+		if (game::environment::is_sp())
+		{
+			return;
+		}
+
 		command::execute("lui_open_popup popup_acceptinginvite", false);
 
 		server_connection_state.host = target;
@@ -760,6 +770,11 @@ namespace party
 	public:
 		void post_unpack() override
 		{
+			if (game::environment::is_sp())
+			{
+				return;
+			}
+
 			// clear motd & usermap
 			cl_disconnect_hook.create(0x12F080_b, cl_disconnect_stub);
 
