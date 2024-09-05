@@ -46,7 +46,7 @@ namespace filesystem
 
 			filesystem::register_path(utils::properties::get_appdata_path() / CLIENT_DATA_FOLDER);
 			filesystem::register_path(L".");
-			filesystem::register_path(L"h1-mod");
+			filesystem::register_path(L"IW5r");
 			filesystem::register_path(L"devraw");
 			filesystem::register_path(L"devraw_shared");
 			filesystem::register_path(L"raw_shared");

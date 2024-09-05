@@ -42,9 +42,9 @@ namespace branding
 			}
 
 #ifdef DEBUG
-			const auto text = "h1-mod: " VERSION " (" __DATE__ " " __TIME__ ")";
+			const auto text = "IW5r: " VERSION " (" __DATE__ " " __TIME__ ")";
 #else
-			const auto text = "h1-mod: " VERSION;
+			const auto text = "IW5r: " VERSION;
 #endif
 
 			const auto placement = game::ScrPlace_GetViewPlacement();

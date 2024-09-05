@@ -18,7 +18,7 @@ namespace utils::properties
 			CoTaskMemFree(path);
 		});
 
-		static auto appdata = std::filesystem::path(path) / "h1-mod";
+		static auto appdata = std::filesystem::path(path) / "IW5r";
 		return appdata;
 	}
 }

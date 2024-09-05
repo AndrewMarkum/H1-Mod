@@ -97,7 +97,7 @@ FARPROC load_binary(const launcher::mode mode, uint64_t* base_address)
 				}
 				else
 				{
-					throw std::runtime_error("Could not find Steam in the registry. If Steam is not installed, you must install it for H1-Mod to work.");
+					throw std::runtime_error("Could not find Steam in the registry. If Steam is not installed, you must install it for IW5r to work.");
 				}
 
 				check_for_steam_install = true;
@@ -133,7 +133,7 @@ FARPROC load_binary(const launcher::mode mode, uint64_t* base_address)
 	if (!utils::io::read_file(binary, &data))
 	{
 		throw std::runtime_error(utils::string::va(
-			"Failed to read game binary (%s)!\nPlease copy the h1-mod.exe into your Call of Duty: Modern Warfare Remastered installation folder and run it from there.",
+			"Failed to read game binary (%s)!\nPlease copy the IW5r.exe into your Call of Duty: Modern Warfare Remastered installation folder and run it from there.",
 			binary.data()));
 	}
 
