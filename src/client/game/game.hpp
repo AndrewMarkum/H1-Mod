@@ -16,6 +16,7 @@ namespace game
 		launcher::mode get_mode();
 		launcher::mode get_real_mode();
 
+		bool is_cp();
 		bool is_sp();
 		bool is_mp();
 		bool is_dedi();

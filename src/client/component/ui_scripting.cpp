@@ -191,6 +191,11 @@ namespace ui_scripting
 				return ::game::environment::is_sp();
 			};
 
+			game_type["iscoop"] = [](const game&)
+			{
+				return ::game::environment::is_cp();
+			};
+
 			game_type["ismultiplayer"] = [](const game&)
 			{
 				return ::game::environment::is_mp();
